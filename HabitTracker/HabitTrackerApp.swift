@@ -7,7 +7,7 @@
 import SwiftUI
 
 @main
-struct uitestApp: App {
+struct HabitApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
