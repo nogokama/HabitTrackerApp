@@ -8,14 +8,25 @@
 import SwiftUI
 
 struct ContentView: View {
-    var habitTracker = HabitTracker()
+    @State private var showingAddingHabitWindow = false
+    @ObservedObject var habitTracker = HabitTracker()
     
     var body: some View {
-        ScrollView {
-            ForEach(habitTracker.habits) { habit in
-                HabitView(habit: habit)
+        VStack {
+            ScrollView {
+                ForEach(habitTracker.habits) { habit in
+                    HabitView(habit: habit)
+                }
             }
-        }.padding()
+                    .padding()
+            Spacer()
+            Button("Add new habit") {
+                self.showingAddingHabitWindow = true
+            }
+                    .sheet (isPresented: $showingAddingHabitWindow) {
+                        CreatingHabitView(habitTracker: self.habitTracker)
+                    }
+        }
     }
 }
 
