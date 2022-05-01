@@ -7,9 +7,9 @@
 
 import Foundation
 
-class Habit: Identifiable {
+class Habit: Identifiable, Codable {
     init(id: Int, title: String) {
-        self.id = id
+        self.id = UUID()
         self.title = title;
         self.completed_days = Set();
     }
@@ -18,7 +18,7 @@ class Habit: Identifiable {
         completed_days.insert(date);
     }
     
-    var id: Int
+    var id: UUID
     var title: String;
     var completed_days: Set<Date>;
 }
