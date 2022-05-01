@@ -17,7 +17,7 @@ struct CreatingHabitView: View {
             }
                     .navigationBarTitle("Add")
                     .navigationBarItems(trailing: Button("Done") {
-                        let habit = Habit(id: -1, title: name)
+                        let habit = Habit(title: name)
                         habitTracker.addNewHabit(habit: habit)
                         self.presentationMode.wrappedValue.dismiss()
                     })

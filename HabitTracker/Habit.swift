@@ -8,7 +8,7 @@
 import Foundation
 
 class Habit: Identifiable, Codable {
-    init(id: Int, title: String) {
+    init(title: String) {
         self.id = UUID()
         self.title = title;
         self.completed_days = Set();
