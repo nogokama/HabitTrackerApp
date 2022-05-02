@@ -19,7 +19,8 @@ struct ContentView: View {
                         .font(.largeTitle)
                         .fontWeight(.bold)
                 Spacer()
-            }.frame(width: UIScreen.main.bounds.width * 0.9, height: UIScreen.main.bounds.height * 0.1)
+            }
+                    .frame(width: UIScreen.main.bounds.width * 0.9, height: UIScreen.main.bounds.height * 0.1)
 
             ScrollView {
                 ForEach(habitTracker.habits) { habit in
@@ -35,17 +36,17 @@ struct ContentView: View {
                 Button(action: {
                     self.showingAddingHabitWindow = true
                 },
-                label: {
-                    Text("+")
-                            .fontWeight(.bold)
-                            .font(.largeTitle)
-                            .padding()
-                            .frame(width: UIScreen.main.bounds.width * 0.2, height: UIScreen.main.bounds.width*0.2)
-                            .background(LinearGradient(gradient: Gradient(colors: [Color.red, Color.blue]), startPoint: .top, endPoint: .bottom))
-                            .clipShape(Circle())
-                            .foregroundColor(.white)
-                            .padding(10)
-                }
+                        label: {
+                            Text("+")
+                                    .fontWeight(.bold)
+                                    .font(.largeTitle)
+                                    .padding()
+                                    .frame(width: UIScreen.main.bounds.width * 0.2, height: UIScreen.main.bounds.width * 0.2)
+                                    .background(LinearGradient(gradient: Gradient(colors: [Color.red, Color.blue]), startPoint: .top, endPoint: .bottom))
+                                    .clipShape(Circle())
+                                    .foregroundColor(.white)
+                                    .padding(10)
+                        }
                 )
                         .sheet(isPresented: $showingAddingHabitWindow) {
                             CreatingHabitView(habitTracker: self.habitTracker)
