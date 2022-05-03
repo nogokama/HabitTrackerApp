@@ -25,7 +25,7 @@ struct ContentView: View {
 
             ScrollView {
                 ForEach(habitTracker.habits) { habit in
-                    HabitView(habit: habit)
+                    DiscreteHabitView(habit: habit)
                 }
             }
                     .padding()

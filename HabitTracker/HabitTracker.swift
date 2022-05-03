@@ -12,42 +12,42 @@ class HabitTracker : ObservableObject {
         self.habits = []
         if let habits = UserDefaults.standard.data(forKey: "Habits") {
             let decoder = JSONDecoder()
-            if let decoded = try? decoder.decode([Habit].self, from: habits) {
+            if let decoded = try? decoder.decode([DiscreteHabit].self, from: habits) {
                 self.habits = decoded
                 return
             }
         }
         else {
             self.habits = [
-                Habit( title: "Чтение"),
-                Habit(title: "Прогулка"),
-                Habit(title: "Прогулка"),
-                Habit(title: "Прогулка"),
-                Habit(title: "Прогулка"),
-                Habit(title: "Прогулка"),
-                Habit(title: "Прогулка"),
-                Habit(title: "Прогулка"),
-                Habit(title: "Прогулка"),
-                Habit(title: "Прогулка"),
-                Habit(title: "Прогулка"),
-                Habit(title: "Прогулка"),
-                Habit(title: "Прогулка"),
-                Habit(title: "Прогулка"),
-                Habit(title: "Прогулка"),
-                Habit(title: "Прогулка"),
+                DiscreteHabit( title: "Чтение"),
+                DiscreteHabit(title: "Прогулка"),
+                DiscreteHabit(title: "Прогулка"),
+                DiscreteHabit(title: "Прогулка"),
+                DiscreteHabit(title: "Прогулка"),
+                DiscreteHabit(title: "Прогулка"),
+                DiscreteHabit(title: "Прогулка"),
+                DiscreteHabit(title: "Прогулка"),
+                DiscreteHabit(title: "Прогулка"),
+                DiscreteHabit(title: "Прогулка"),
+                DiscreteHabit(title: "Прогулка"),
+                DiscreteHabit(title: "Прогулка"),
+                DiscreteHabit(title: "Прогулка"),
+                DiscreteHabit(title: "Прогулка"),
+                DiscreteHabit(title: "Прогулка"),
+                DiscreteHabit(title: "Прогулка"),
             ]
         }
     }
     
-    public func getHabits() -> Array<Habit> {
+    public func getHabits() -> Array<DiscreteHabit> {
         return self.habits;
     }
 
-    public func addNewHabit(habit : Habit) {
+    public func addNewHabit(habit : DiscreteHabit) {
         self.habits.append(habit)
     }
     
-    @Published var habits: [Habit] {
+    @Published var habits: [DiscreteHabit] {
         didSet {
             let encoder = JSONEncoder()
             if let encoded = try? encoder.encode(habits) {

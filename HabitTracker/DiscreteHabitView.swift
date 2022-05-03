@@ -8,8 +8,8 @@
 import Foundation
 import SwiftUI
 
-struct HabitView: View {
-    let habit: Habit
+struct DiscreteHabitView: View {
+    let habit: DiscreteHabit
     
     var body: some View {
         HStack {
