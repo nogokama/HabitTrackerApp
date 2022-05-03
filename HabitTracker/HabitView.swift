@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 struct HabitView: View {
-    let habit: Habit
+    let habit: DiscreteHabit
     
     var body: some View {
         HStack {

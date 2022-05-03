@@ -7,7 +7,7 @@
 
 import Foundation
 
-class Habit: Identifiable, Codable {
+class DiscreteHabit: Identifiable, Codable {
     init(title: String) {
         self.id = UUID()
         self.title = title;

@@ -18,7 +18,7 @@ struct CreatingHabitView: View {
                     .navigationBarTitle("Add")
                     .navigationBarItems(trailing: Button("Done") {
                         if (name != "") {
-                            let habit = Habit(title: name)
+                            let habit = DiscreteHabit(title: name)
                             habitTracker.addNewHabit(habit: habit)
                         }
                         self.presentationMode.wrappedValue.dismiss()
