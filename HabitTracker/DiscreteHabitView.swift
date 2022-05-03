@@ -74,7 +74,6 @@ struct SingleTypingButtonView: View {
             HStack {
                 if tapped {
                     Image(systemName: "checkmark")
-                            .resizable()
                             .foregroundColor(.black)
                 } else {
                     Image(systemName: "poweroff")
