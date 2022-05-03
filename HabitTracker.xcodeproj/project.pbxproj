@@ -14,7 +14,7 @@
 		1EBB9C43281E9D000060018A /* DiscreteHabit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBB9C42281E9CFF0060018A /* DiscreteHabit.swift */; };
 		1EBB9C45281EA6430060018A /* HabitTrackerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBB9C44281EA6430060018A /* HabitTrackerApp.swift */; };
 		1EBB9C47281EA9290060018A /* HabitTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBB9C46281EA9290060018A /* HabitTracker.swift */; };
-		1ECCC5BA281EB42300D39316 /* HabitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECCC5B9281EB42300D39316 /* HabitView.swift */; };
+		1ECCC5BA281EB42300D39316 /* DiscreteHabitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECCC5B9281EB42300D39316 /* DiscreteHabitView.swift */; };
 		31A523C99F7437418CCA2DCC /* CreatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A52674D0AB15A1A36CDE29 /* CreatingView.swift */; };
 /* End PBXBuildFile section */
 
@@ -27,7 +27,7 @@
 		1EBB9C42281E9CFF0060018A /* DiscreteHabit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscreteHabit.swift; sourceTree = "<group>"; };
 		1EBB9C44281EA6430060018A /* HabitTrackerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitTrackerApp.swift; sourceTree = "<group>"; };
 		1EBB9C46281EA9290060018A /* HabitTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitTracker.swift; sourceTree = "<group>"; };
-		1ECCC5B9281EB42300D39316 /* HabitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitView.swift; sourceTree = "<group>"; };
+		1ECCC5B9281EB42300D39316 /* DiscreteHabitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscreteHabitView.swift; sourceTree = "<group>"; };
 		31A52674D0AB15A1A36CDE29 /* CreatingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreatingView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -68,7 +68,7 @@
 				1C65D9F4273D731A008FE641 /* Assets.xcassets */,
 				1C65D9F6273D731A008FE641 /* Preview Content */,
 				1EBB9C46281EA9290060018A /* HabitTracker.swift */,
-				1ECCC5B9281EB42300D39316 /* HabitView.swift */,
+				1ECCC5B9281EB42300D39316 /* DiscreteHabitView.swift */,
 				31A52674D0AB15A1A36CDE29 /* CreatingView.swift */,
 			);
 			path = HabitTracker;
@@ -155,7 +155,7 @@
 				1C65D9F3273D7319008FE641 /* ContentView.swift in Sources */,
 				1EBB9C45281EA6430060018A /* HabitTrackerApp.swift in Sources */,
 				1C65D9FF273D7BB9008FE641 /* main_counter.swift in Sources */,
-				1ECCC5BA281EB42300D39316 /* HabitView.swift in Sources */,
+				1ECCC5BA281EB42300D39316 /* DiscreteHabitView.swift in Sources */,
 				1EBB9C43281E9D000060018A /* DiscreteHabit.swift in Sources */,
 				1EBB9C47281EA9290060018A /* HabitTracker.swift in Sources */,
 				31A523C99F7437418CCA2DCC /* CreatingView.swift in Sources */,
