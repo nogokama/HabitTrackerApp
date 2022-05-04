@@ -37,30 +37,29 @@ struct ContentView: View {
                             self.showingAddingHabitWindow = true
                         },
                         label: {
-                            Text("+")
-                                .fontWeight(.bold)
-                                .font(.largeTitle)
-                                .padding()
-                                .frame(
-                                    width: UIScreen.main.bounds.width * 0.2,
-                                    height: UIScreen.main.bounds.width * 0.2)
-                                    .background(
-                                        LinearGradient(
-                                            gradient:
-                                                Gradient(colors: [Color.red, Color.blue]),
-                                            startPoint: .top,
-                                            endPoint: .bottom)
-                                        )
-                                            .clipShape(Circle()
-                                    )
-                                        .foregroundColor(.white)
-                                        .padding(10)
+                            ZStack {
+                                Rectangle()
+                                    .fill(.white)
+                                    .frame(width: 40, height: 40)
+                                Image(systemName: "plus.circle.fill")
+                                    .resizable()
+                                    .frame(width: 80, height: 80)
+                                    .foregroundStyle(LinearGradient(
+                                        gradient: Gradient(stops: [
+                                            .init(color: Color(#colorLiteral(red: 0.2196078449, green: 0.007843137719, blue: 0.8549019694, alpha: 1)), location: 0),
+                                            .init(color: Color(#colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1)), location: 1)
+                                        ]),
+                                        startPoint: .bottomTrailing,
+                                        endPoint: .topLeading
+                                    ))
+                            }
                         }
                     )
-                        .sheet(isPresented: $showingAddingHabitWindow) {
-                            CreatingHabitView(habitTracker: self.habitTracker)
-                        }
-                }.padding()
+                    .padding()
+                    .sheet(isPresented: $showingAddingHabitWindow) {
+                        CreatingHabitView(habitTracker: self.habitTracker)
+                    }
+                }
             }
         }
     }
