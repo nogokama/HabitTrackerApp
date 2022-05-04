@@ -122,6 +122,7 @@ class DiscreteHabit: ObservableObject, Identifiable, Codable {
     var completed_days: Set<String>
     @Published var success: Int
 
+
     private enum CodingKeys: CodingKey {
         case id, title, completed_days
     }
