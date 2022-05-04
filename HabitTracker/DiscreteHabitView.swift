@@ -20,7 +20,7 @@ struct DiscreteHabitView: View {
                     HStack {
                         VStack {
                             HStack {
-                                Text(habit.title)
+                                Text("\(habit.title)")
                                         .font(.title)
                                         .fontWeight(.bold)
                                         .padding(.top)
@@ -49,6 +49,21 @@ struct DiscreteHabitView: View {
     }
 }
 
+class DiscreteHabitView_Previews: PreviewProvider {
+    static var previews: some View {
+        DiscreteHabitView(habit: DiscreteHabit())
+    }
+
+    #if DEBUG
+    @objc class func injected() {
+        let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
+        windowScene?.windows.first?.rootViewController =
+                UIHostingController(rootView: DiscreteHabitView(habit: DiscreteHabit()))
+    }
+    #endif
+}
+
+
 struct TappingButtonsView: View {
     let habit: DiscreteHabit
     let totalButtonsCount = 4
@@ -61,6 +76,21 @@ struct TappingButtonsView: View {
         }
     }
 }
+
+class TappingButtonsView_Previews: PreviewProvider {
+    static var previews: some View {
+        TappingButtonsView(habit: DiscreteHabit())
+    }
+
+    #if DEBUG
+    @objc class func injected() {
+        let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
+        windowScene?.windows.first?.rootViewController =
+                UIHostingController(rootView: TappingButtonsView(habit: DiscreteHabit()))
+    }
+    #endif
+}
+
 
 struct SingleTypingButtonView: View {
     let habit: DiscreteHabit
@@ -83,3 +113,18 @@ struct SingleTypingButtonView: View {
         })
     }
 }
+
+class SingleTypingButtonView_Previews: PreviewProvider {
+    static var previews: some View {
+        SingleTypingButtonView(habit: DiscreteHabit(), position: 0)
+    }
+
+    #if DEBUG
+    @objc class func injected() {
+        let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
+        windowScene?.windows.first?.rootViewController =
+                UIHostingController(rootView: SingleTypingButtonView(habit: DiscreteHabit(), position: 0))
+    }
+    #endif
+}
+
