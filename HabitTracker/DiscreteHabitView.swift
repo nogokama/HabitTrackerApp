@@ -10,11 +10,9 @@ import SwiftUI
 
 struct DiscreteHabitView: View {
     @ObservedObject var habit: DiscreteHabit
-    let habitTracker: HabitTracker
 
-    init(habit: DiscreteHabit, habitTracker: HabitTracker = HabitTracker()) {
+    init(habit: DiscreteHabit) {
         self.habit = habit
-        self.habitTracker = habitTracker
     }
 
     var body: some View {
@@ -40,7 +38,7 @@ struct DiscreteHabitView: View {
                                         .font(.title)
                                         .foregroundColor(.black)
                                 Spacer()
-                                TappingButtonsView(habit: habit, habitTracker: habitTracker)
+                                TappingButtonsView(habit: habit)
                             }
                                     .frame(width: UIScreen.main.bounds.width * 0.8)
                         }
@@ -57,20 +55,17 @@ struct DiscreteHabitView: View {
 
 struct TappingButtonsView: View {
     let habit: DiscreteHabit
-    let habitTracker: HabitTracker
     let totalButtonsCount = 4
 
-    init(habit: DiscreteHabit, habitTracker: HabitTracker = HabitTracker()) {
+    init(habit: DiscreteHabit) {
         self.habit = habit
-        self.habitTracker = habitTracker
     }
 
     var body: some View {
         HStack {
             ForEach(0..<totalButtonsCount) { element in
                 SingleTypingButtonView(habit: habit,
-                        position: totalButtonsCount - element - 1,
-                        habitTracker: habitTracker)
+                        position: totalButtonsCount - element - 1)
             }
         }
     }
@@ -79,14 +74,12 @@ struct TappingButtonsView: View {
 struct SingleTypingButtonView: View {
     let habit: DiscreteHabit
     let position: Int
-    let habitTracker: HabitTracker
 
     @State var tapped: Bool
 
-    init(habit: DiscreteHabit, position: Int, habitTracker: HabitTracker = HabitTracker()) {
+    init(habit: DiscreteHabit, position: Int) {
         self.habit = habit
         self.position = position
-        self.habitTracker = habitTracker
         tapped = habit.isPositionTapped(position: position)
     }
 
@@ -97,7 +90,6 @@ struct SingleTypingButtonView: View {
             } else {
                 self.habit.markPosition(position: self.position)
             }
-            habitTracker.dumpAllData()
             print("Hello from Habit \(habit.title), button number: \(position)")
             tapped.toggle()
         }, label: {

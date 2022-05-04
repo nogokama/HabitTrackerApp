@@ -16,8 +16,10 @@ class HabitTracker: ObservableObject {
             let decoder = JSONDecoder()
             if let decoded = try? decoder.decode([DiscreteHabit].self, from: habits) {
                 self.habits = decoded
-                return
             }
+        }
+        for habit in self.habits {
+            habit.habitTracker = self
         }
     }
 

@@ -13,6 +13,7 @@ class DiscreteHabit: ObservableObject, Identifiable, Codable {
         self.title = title;
         self.completed_days = Set();
         self.success = 0
+        self.habitTracker = nil
         self.success = calculateTotalSuccess()
     }
 
@@ -49,11 +50,15 @@ class DiscreteHabit: ObservableObject, Identifiable, Codable {
     public func unmarkPosition(position: Int) {
         removeDate(date: getDateFromToday(byAddingDays: -position))
         recalculateSuccess()
+        habitTracker!.dumpAllData()
+        //FIXME each habit now must know about habitTracker
     }
 
     public func markPosition(position: Int) {
         addDate(date: getDateFromToday(byAddingDays: -position))
         recalculateSuccess()
+        habitTracker!.dumpAllData()
+        //FIXME each habit now must know about habitTracker
     }
 
     public func isPositionTapped(position: Int) -> Bool {
@@ -121,7 +126,7 @@ class DiscreteHabit: ObservableObject, Identifiable, Codable {
     @Published var title: String
     var completed_days: Set<String>
     @Published var success: Int
-
+    var habitTracker:HabitTracker?
 
     private enum CodingKeys: CodingKey {
         case id, title, completed_days
