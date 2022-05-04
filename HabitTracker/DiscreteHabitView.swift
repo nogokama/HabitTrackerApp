@@ -16,40 +16,46 @@ struct DiscreteHabitView: View {
     }
 
     var body: some View {
-        Button(action: {
-            print("Large Button tapped!")
-        }
-                ,
-                label: {
+        Button(
+            action: {
+                print("Large Button tapped!")
+            },
+            label: {
+                VStack {
                     HStack {
-                        VStack {
-                            HStack {
-                                Text("\(habit.title)")
-                                        .font(.title)
-                                        .fontWeight(.bold)
-                                        .padding(.top)
-                                        .padding(.leading)
-                                        .foregroundColor(.black)
-                                Spacer()
-                            }
-                            Spacer()
-                            HStack {
-                                Text("\(habit.progress)%")
-                                        .font(.title)
-                                        .foregroundColor(.black)
-                                Spacer()
-                                TappingButtonsView(habit: habit)
-                            }
-                                    .frame(width: UIScreen.main.bounds.width * 0.8)
-                        }
-                                .padding(.bottom)
-                                .background(.yellow)
-                                .cornerRadius(10)
+                        Text(habit.title)
+                            .font(.title)
+                            .fontWeight(.bold)
+                            .padding(.top)
+                            .padding(.leading)
+                            .foregroundColor(.white)
+                        Spacer()
                     }
-                            .frame(width: UIScreen.main.bounds.width * 0.9,
-                                    height: UIScreen.main.bounds.height * 0.15)
+                    Spacer(minLength: 30)
+                    HStack {
+                        Text("\(habit.calculateTotalSuccess())%")
+                            .font(.title)
+                            .foregroundColor(.white)
+                        Spacer()
+                        TappingButtonsView(habit: habit)
+                    }
+                        .padding(.leading)
+                        .padding(.trailing)
                 }
-        )
+                    .padding(.bottom)
+                    .background(
+                        LinearGradient(
+                            gradient: Gradient(stops: [
+                                .init(color: Color(#colorLiteral(red: 0.776, green: 0.266, blue: 0.988, alpha: 1)), location: 0),
+                                .init(color: Color(#colorLiteral(red: 0.357, green: 0.349, blue: 0.870, alpha: 1)), location: 1)
+                            ]),
+                            startPoint: .bottomTrailing,
+                            endPoint: .topLeading
+                        )
+                    )
+                    .cornerRadius(20)
+            }
+        ).padding()
     }
 }
 
@@ -79,8 +85,15 @@ struct TappingButtonsView: View {
     var body: some View {
         HStack {
             ForEach(0..<totalButtonsCount) { element in
+<<<<<<< HEAD
                 SingleTypingButtonView(habit: habit,
                         position: totalButtonsCount - element - 1)
+=======
+                SingleTypingButtonView(
+                    habit: habit,
+                    position: totalButtonsCount - element
+                )
+>>>>>>> d159b6d (Basic fixes)
             }
         }
     }
@@ -126,10 +139,11 @@ struct SingleTypingButtonView: View {
             HStack {
                 if tapped {
                     Image(systemName: "checkmark")
-                            .foregroundColor(.black)
+                        .scaledToFit()
+                        .foregroundColor(.white)
                 } else {
                     Image(systemName: "poweroff")
-                            .foregroundColor(.black)
+                        .foregroundColor(.white)
                 }
             }
         })
