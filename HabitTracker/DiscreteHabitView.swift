@@ -46,11 +46,12 @@ struct DiscreteHabitView: View {
                     .background(
                         LinearGradient(
                             gradient: Gradient(stops: [
-                                .init(color: Color(#colorLiteral(red: 0.776, green: 0.266, blue: 0.988, alpha: 1)), location: 0),
-                                .init(color: Color(#colorLiteral(red: 0.357, green: 0.349, blue: 0.870, alpha: 1)), location: 1)
+                                .init(color: Color(#colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1)), location: 0),
+                                .init(color: Color(#colorLiteral(red: 0.9607843161, green: 0.7058823705, blue: 0.200000003, alpha: 1)), location: 1)
                             ]),
                             startPoint: .bottomTrailing,
                             endPoint: .topLeading
+                            
                         )
                     )
                     .cornerRadius(20)
