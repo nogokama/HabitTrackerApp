@@ -9,7 +9,11 @@ import Foundation
 import SwiftUI
 
 struct DiscreteHabitView: View {
-    let habit: DiscreteHabit
+    @ObservedObject var habit: DiscreteHabit
+
+    init(habit: DiscreteHabit) {
+        self.habit = habit
+    }
 
     var body: some View {
         Button(action: {
@@ -30,7 +34,7 @@ struct DiscreteHabitView: View {
                             }
                             Spacer()
                             HStack {
-                                Text("\(habit.calculateTotalSuccess())%")
+                                Text("\(habit.progress)%")
                                         .font(.title)
                                         .foregroundColor(.black)
                                 Spacer()
@@ -67,11 +71,16 @@ class DiscreteHabitView_Previews: PreviewProvider {
 struct TappingButtonsView: View {
     let habit: DiscreteHabit
     let totalButtonsCount = 4
+
+    init(habit: DiscreteHabit) {
+        self.habit = habit
+    }
+
     var body: some View {
         HStack {
             ForEach(0..<totalButtonsCount) { element in
                 SingleTypingButtonView(habit: habit,
-                        position: totalButtonsCount - element)
+                        position: totalButtonsCount - element - 1)
             }
         }
     }
@@ -95,9 +104,22 @@ class TappingButtonsView_Previews: PreviewProvider {
 struct SingleTypingButtonView: View {
     let habit: DiscreteHabit
     let position: Int
-    @State var tapped = false
+
+    @State var tapped: Bool
+
+    init(habit: DiscreteHabit, position: Int) {
+        self.habit = habit
+        self.position = position
+        tapped = habit.isPositionTapped(position: position)
+    }
+
     var body: some View {
         Button(action: {
+            if tapped {
+                self.habit.unmarkPosition(position: self.position)
+            } else {
+                self.habit.markPosition(position: self.position)
+            }
             print("Hello from Habit \(habit.title), button number: \(position)")
             tapped.toggle()
         }, label: {
