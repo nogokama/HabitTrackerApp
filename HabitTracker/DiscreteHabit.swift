@@ -50,14 +50,12 @@ class DiscreteHabit: ObservableObject, Identifiable, Codable {
     public func unmarkPosition(position: Int) {
         removeDate(date: getDateFromToday(byAddingDays: -position))
         recalculateSuccess()
-        habitTracker!.dumpAllData()
         //FIXME each habit now must know about habitTracker
     }
 
     public func markPosition(position: Int) {
         addDate(date: getDateFromToday(byAddingDays: -position))
         recalculateSuccess()
-        habitTracker!.dumpAllData()
         //FIXME each habit now must know about habitTracker
     }
 
@@ -124,7 +122,13 @@ class DiscreteHabit: ObservableObject, Identifiable, Codable {
 
     var id: UUID
     @Published var title: String
-    var completed_days: Set<String>
+    var completed_days: Set<String> {
+        didSet {
+            habitTracker!.dumpAllData()
+            // TODO check if nil
+        }
+    }
+
     @Published var success: Int
     var habitTracker:HabitTracker?
 
