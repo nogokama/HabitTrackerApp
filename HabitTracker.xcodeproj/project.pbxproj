@@ -11,6 +11,7 @@
 		1C65D9F5273D731A008FE641 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1C65D9F4273D731A008FE641 /* Assets.xcassets */; };
 		1C65D9F8273D731A008FE641 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1C65D9F7273D731A008FE641 /* Preview Assets.xcassets */; };
 		1C65D9FF273D7BB9008FE641 /* main_counter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C65D9FE273D7BB9008FE641 /* main_counter.swift */; };
+		1E69D9F1282454D30063E132 /* SwiftUICharts in Frameworks */ = {isa = PBXBuildFile; productRef = 1E69D9F0282454D30063E132 /* SwiftUICharts */; };
 		1EBB9C43281E9D000060018A /* DiscreteHabit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBB9C42281E9CFF0060018A /* DiscreteHabit.swift */; };
 		1EBB9C45281EA6430060018A /* HabitTrackerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBB9C44281EA6430060018A /* HabitTrackerApp.swift */; };
 		1EBB9C47281EA9290060018A /* HabitTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBB9C46281EA9290060018A /* HabitTracker.swift */; };
@@ -36,6 +37,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1E69D9F1282454D30063E132 /* SwiftUICharts in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -98,6 +100,9 @@
 			dependencies = (
 			);
 			name = HabitTracker;
+			packageProductDependencies = (
+				1E69D9F0282454D30063E132 /* SwiftUICharts */,
+			);
 			productName = uitest;
 			productReference = 1C65D9ED273D7319008FE641 /* HabitTracker.app */;
 			productType = "com.apple.product-type.application";
@@ -126,6 +131,9 @@
 				Base,
 			);
 			mainGroup = 1C65D9E4273D7319008FE641;
+			packageReferences = (
+				1E69D9EF282454D30063E132 /* XCRemoteSwiftPackageReference "ChartView" */,
+			);
 			productRefGroup = 1C65D9EE273D7319008FE641 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -220,9 +228,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_LDFLAGS = (
-					"\"-Xlinker -interposable\"",
-				);
+				OTHER_LDFLAGS = "\"-Xlinker -interposable\"";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -362,6 +368,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		1E69D9EF282454D30063E132 /* XCRemoteSwiftPackageReference "ChartView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/AppPear/ChartView";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		1E69D9F0282454D30063E132 /* SwiftUICharts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1E69D9EF282454D30063E132 /* XCRemoteSwiftPackageReference "ChartView" */;
+			productName = SwiftUICharts;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 1C65D9E5273D7319008FE641 /* Project object */;
 }
