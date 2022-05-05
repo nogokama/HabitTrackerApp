@@ -27,9 +27,18 @@ struct CreatingHabitView: View {
     }
 }
 
-struct CreatingHabitView_Previews: PreviewProvider {
+class CreatingHabitView_Previews: PreviewProvider {
     static var previews: some View {
         CreatingHabitView(habitTracker: HabitTracker())
     }
+
+    #if DEBUG
+    @objc class func injected() {
+        let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
+        windowScene?.windows.first?.rootViewController =
+                UIHostingController(rootView: CreatingHabitView(habitTracker: HabitTracker())
+                )
+    }
+    #endif
 }
 

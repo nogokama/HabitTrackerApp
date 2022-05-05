@@ -73,7 +73,7 @@ class HabitDate: Hashable, Codable, Comparable {
 
 
 class DiscreteHabit: ObservableObject, Identifiable, Codable {
-    init(title: String) {
+    init(title: String = "default") {
         self.id = UUID()
         self.title = title;
         self.completed_days = Set();
