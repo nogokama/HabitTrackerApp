@@ -77,9 +77,9 @@ class DiscreteHabit: ObservableObject, Identifiable, Codable {
         self.id = UUID()
         self.title = title;
         self.completed_days = Set();
-        self.success = 0
+        self.progress = 0
         self.habitTracker = nil
-        self.success = calculateTotalSuccess()
+        self.progress = calculateTotalProgress()
     }
 
     public func addDate(date: HabitDate) {
@@ -103,13 +103,13 @@ class DiscreteHabit: ObservableObject, Identifiable, Codable {
 
     public func unmarkPosition(position: Int) {
         removeDate(date: HabitDate.getDateFromToday(byAddingDays: -position))
-        recalculateSuccess()
+        recalculateProgress()
         //FIXME each habit now must know about habitTracker
     }
 
     public func markPosition(position: Int) {
         addDate(date: HabitDate.getDateFromToday(byAddingDays: -position))
-        recalculateSuccess()
+        recalculateProgress()
         //FIXME each habit now must know about habitTracker
     }
 
@@ -117,7 +117,7 @@ class DiscreteHabit: ObservableObject, Identifiable, Codable {
         completed_days.contains(HabitDate.getDateFromToday(byAddingDays: -position))
     }
 
-    public func calculateTotalSuccess() -> Int {
+    public func calculateTotalProgress() -> Int {
         var dates: Array<HabitDate> = []
         for element in completed_days {
             dates.append(element)
@@ -144,9 +144,9 @@ class DiscreteHabit: ObservableObject, Identifiable, Codable {
     }
 
 
-    private func recalculateSuccess() {
-        success = calculateTotalSuccess()
-        print(success)
+    private func recalculateProgress() {
+        progress = calculateTotalProgress()
+        print(progress)
     }
 
     private func calculateAdditionalPercent(currentPercent: Int) -> Int {
@@ -175,7 +175,7 @@ class DiscreteHabit: ObservableObject, Identifiable, Codable {
         }
     }
 
-    @Published var success: Int
+    @Published var progress: Int
     var habitTracker: HabitTracker?
 
     private enum CodingKeys: CodingKey {
@@ -187,8 +187,8 @@ class DiscreteHabit: ObservableObject, Identifiable, Codable {
         id = try container.decode(UUID.self, forKey: .id)
         title = try container.decode(String.self, forKey: .title)
         completed_days = try container.decode(Set<HabitDate>.self, forKey: .completed_days)
-        success = 0
-        success = calculateTotalSuccess()
+        progress = 0
+        progress = calculateTotalProgress()
     }
 
     func encode(to encoder: Encoder) throws {

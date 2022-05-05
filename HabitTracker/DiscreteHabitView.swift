@@ -34,7 +34,7 @@ struct DiscreteHabitView: View {
                             }
                             Spacer()
                             HStack {
-                                Text("\(habit.success)%")
+                                Text("\(habit.progress)%")
                                         .font(.title)
                                         .foregroundColor(.black)
                                 Spacer()
