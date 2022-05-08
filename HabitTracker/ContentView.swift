@@ -24,7 +24,11 @@ struct ContentView: View {
                     },
                     label: {
                         Image(systemName: "plus.circle")
-                            .scaleEffect(2)
+                            .resizable()
+                            .frame(
+                                width: 40,
+                                height: 40
+                            )
                     }
                 )
                 .padding(.trailing)
