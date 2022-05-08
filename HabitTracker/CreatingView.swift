@@ -15,14 +15,15 @@ struct CreatingHabitView: View {
             Form {
                 TextField("Habit Name", text: $name)
             }
-                    .navigationBarTitle("Add")
-                    .navigationBarItems(trailing: Button("Done") {
-                        if (name != "") {
-                            let habit = DiscreteHabit(title: name)
-                            habitTracker.addNewHabit(habit: habit)
-                        }
-                        self.presentationMode.wrappedValue.dismiss()
-                    })
+            .navigationBarTitle("Add")
+            .navigationBarItems(trailing: Button("Done") {
+                if (name != "") {
+                    let habit = DiscreteHabit(title: name)
+                    habitTracker.addNewHabit(habit: habit)
+                    habit.habitTracker = habitTracker
+                }
+                self.presentationMode.wrappedValue.dismiss()
+            })
         }
     }
 }
