@@ -121,6 +121,11 @@ struct SingleTypingButtonView: View {
     var body: some View {
         Button(
             action: {
+                if tapped {
+                    self.habit.unmarkPosition(position: self.position)
+                } else {
+                    self.habit.markPosition(position: self.position)
+                }
                 print("Hello from Habit \(habit.title), button number: \(position)")
                 tapped.toggle()
             }, label: {
