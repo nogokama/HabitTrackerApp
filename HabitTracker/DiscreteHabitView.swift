@@ -16,47 +16,41 @@ struct DiscreteHabitView: View {
     }
 
     var body: some View {
-        Button(
-            action: {
-                print("Large Button tapped!")
-            },
-            label: {
-                VStack {
-                    HStack {
-                        Text(habit.title)
-                            .font(.title)
-                            .fontWeight(.bold)
-                            .padding(.top)
-                            .padding(.leading)
-                            .foregroundColor(.white)
-                        Spacer()
+        ZStack {
+            Button(
+                action: {
+                    print("Large button tapped")
+                },
+                label: {
+                    VStack(spacing: 20) {
+                        HStack {
+                            Text(habit.title)
+                                .font(.title)
+                                .fontWeight(.bold)
+                                .foregroundColor(.black)
+                            Spacer()
+                        }
+                        HStack {
+                            Text("\(habit.progress)%")
+                                .font(.title)
+                                .foregroundColor(.black)
+                            Spacer()
+                        }
                     }
-                    Spacer(minLength: 30)
-                    HStack {
-                        Text("\(habit.calculateTotalSuccess())%")
-                            .font(.title)
-                            .foregroundColor(.white)
-                        Spacer()
-                        TappingButtonsView(habit: habit)
-                    }
-                        .padding(.leading)
-                        .padding(.trailing)
                 }
-                    .padding(.bottom)
-                    .background(
-                        LinearGradient(
-                            gradient: Gradient(stops: [
-                                .init(color: Color(#colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1)), location: 0),
-                                .init(color: Color(#colorLiteral(red: 0.9607843161, green: 0.7058823705, blue: 0.200000003, alpha: 1)), location: 1)
-                            ]),
-                            startPoint: .bottomTrailing,
-                            endPoint: .topLeading
-                            
-                        )
-                    )
-                    .cornerRadius(20)
+            )
+            .padding()
+            .background(Color.yellow)
+            .cornerRadius(20)
+            VStack {
+                Spacer()
+                HStack {
+                    Spacer()
+                    TappingButtonsView(habit: habit)
+                }
             }
-        ).padding()
+            .padding()
+        }
     }
 }
 
@@ -84,19 +78,16 @@ struct TappingButtonsView: View {
     }
 
     var body: some View {
-        HStack {
+        HStack(spacing: 0) {
             ForEach(0..<totalButtonsCount) { element in
-<<<<<<< HEAD
-                SingleTypingButtonView(habit: habit,
-                        position: totalButtonsCount - element - 1)
-=======
                 SingleTypingButtonView(
                     habit: habit,
                     position: totalButtonsCount - element
                 )
->>>>>>> d159b6d (Basic fixes)
             }
         }
+        .padding(.leading)
+        .padding(.trailing)
     }
 }
 
@@ -128,26 +119,32 @@ struct SingleTypingButtonView: View {
     }
 
     var body: some View {
-        Button(action: {
-            if tapped {
-                self.habit.unmarkPosition(position: self.position)
-            } else {
-                self.habit.markPosition(position: self.position)
-            }
-            print("Hello from Habit \(habit.title), button number: \(position)")
-            tapped.toggle()
-        }, label: {
-            HStack {
+        Button(
+            action: {
+                print("Hello from Habit \(habit.title), button number: \(position)")
+                tapped.toggle()
+            }, label: {
                 if tapped {
                     Image(systemName: "checkmark")
-                        .scaledToFit()
-                        .foregroundColor(.white)
+                        .foregroundColor(.black)
+                        .frame(
+                            maxWidth: .infinity,
+                            maxHeight: .infinity
+                        )
                 } else {
-                    Image(systemName: "poweroff")
-                        .foregroundColor(.white)
+                    Image(systemName: "circle")
+                        .foregroundColor(.black)
+                        .frame(
+                            maxWidth: .infinity,
+                            maxHeight: .infinity
+                        )
                 }
             }
-        })
+        )
+        .frame(
+            width: 40,
+            height: 40
+        )
     }
 }
 
