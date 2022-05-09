@@ -16,14 +16,15 @@ struct CreatingHabitView: View {
                 TextField("Habit Name", text: $name)
             }
             .navigationBarTitle("Add")
-            .navigationBarItems(trailing: Button("Done") {
-                if (name != "") {
-                    let habit = DiscreteHabit(title: name)
-                    habitTracker.addNewHabit(habit: habit)
-                    habit.habitTracker = habitTracker
-                }
-                self.presentationMode.wrappedValue.dismiss()
-            })
+            .navigationBarItems(
+                trailing: Button("Done") {
+                    if name != "" {
+                        let habit = DiscreteHabit(title: name)
+                        habitTracker.addNewHabit(habit: habit)
+                        habit.habitTracker = habitTracker
+                    }
+                    self.presentationMode.wrappedValue.dismiss()
+                })
         }
     }
 }
@@ -34,12 +35,12 @@ class CreatingHabitView_Previews: PreviewProvider {
     }
 
     #if DEBUG
-    @objc class func injected() {
-        let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
-        windowScene?.windows.first?.rootViewController =
-                UIHostingController(rootView: CreatingHabitView(habitTracker: HabitTracker())
+        @objc class func injected() {
+            let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
+            windowScene?.windows.first?.rootViewController =
+                UIHostingController(
+                    rootView: CreatingHabitView(habitTracker: HabitTracker())
                 )
-    }
+        }
     #endif
 }
-

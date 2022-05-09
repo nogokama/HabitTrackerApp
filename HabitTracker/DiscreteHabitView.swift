@@ -60,14 +60,13 @@ class DiscreteHabitView_Previews: PreviewProvider {
     }
 
     #if DEBUG
-    @objc class func injected() {
-        let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
-        windowScene?.windows.first?.rootViewController =
+        @objc class func injected() {
+            let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
+            windowScene?.windows.first?.rootViewController =
                 UIHostingController(rootView: DiscreteHabitView(habit: DiscreteHabit()))
-    }
+        }
     #endif
 }
-
 
 struct TappingButtonsView: View {
     let habit: DiscreteHabit
@@ -97,14 +96,13 @@ class TappingButtonsView_Previews: PreviewProvider {
     }
 
     #if DEBUG
-    @objc class func injected() {
-        let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
-        windowScene?.windows.first?.rootViewController =
+        @objc class func injected() {
+            let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
+            windowScene?.windows.first?.rootViewController =
                 UIHostingController(rootView: TappingButtonsView(habit: DiscreteHabit()))
-    }
+        }
     #endif
 }
-
 
 struct SingleTypingButtonView: View {
     let habit: DiscreteHabit
@@ -128,7 +126,8 @@ struct SingleTypingButtonView: View {
                 }
                 print("Hello from Habit \(habit.title), button number: \(position)")
                 tapped.toggle()
-            }, label: {
+            },
+            label: {
                 if tapped {
                     Image(systemName: "checkmark")
                         .foregroundColor(.black)
@@ -159,11 +158,11 @@ class SingleTypingButtonView_Previews: PreviewProvider {
     }
 
     #if DEBUG
-    @objc class func injected() {
-        let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
-        windowScene?.windows.first?.rootViewController =
-                UIHostingController(rootView: SingleTypingButtonView(habit: DiscreteHabit(), position: 0))
-    }
+        @objc class func injected() {
+            let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
+            windowScene?.windows.first?.rootViewController =
+                UIHostingController(
+                    rootView: SingleTypingButtonView(habit: DiscreteHabit(), position: 0))
+        }
     #endif
 }
-
