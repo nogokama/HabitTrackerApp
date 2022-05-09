@@ -9,7 +9,7 @@ import Foundation
 
 class HabitDate: Hashable, Codable, Comparable {
 
-    static func ==(lhs: HabitDate, rhs: HabitDate) -> Bool {
+    static func == (lhs: HabitDate, rhs: HabitDate) -> Bool {
         lhs.day == rhs.day && lhs.month == rhs.month && lhs.year == rhs.year
     }
 
@@ -47,13 +47,17 @@ class HabitDate: Hashable, Codable, Comparable {
     }
 
     public func getDaysDifference(otherDate: HabitDate) -> Int {
-        Calendar.current.dateComponents([.day],
-                from: getSwiftDate(),
-                to: otherDate.getSwiftDate()).day! - 1
+        Calendar.current.dateComponents(
+            [.day],
+            from: getSwiftDate(),
+            to: otherDate.getSwiftDate()
+        ).day! - 1
     }
 
     static func getDateFromToday(byAddingDays: Int) -> HabitDate {
-        HabitDate(date: Calendar.current.date(byAdding: .day,
+        HabitDate(
+            date: Calendar.current.date(
+                byAdding: .day,
                 value: byAddingDays,
                 to: Date.now)!)
     }
@@ -71,22 +75,21 @@ class HabitDate: Hashable, Codable, Comparable {
     var year: Int
 }
 
-
 class DiscreteHabit: ObservableObject, Identifiable, Codable {
     init(title: String = "default") {
         self.id = UUID()
-        self.title = title;
-        self.completed_days = Set();
+        self.title = title
+        self.completed_days = Set()
         self.progress = 0
         self.habitTracker = nil
         self.progress = calculateTotalProgress()
     }
 
     public func addDate(date: HabitDate) {
-        completed_days.insert(date);
+        completed_days.insert(date)
     }
     public func addDate(date: Date) {
-        completed_days.insert(HabitDate(date: date));
+        completed_days.insert(HabitDate(date: date))
     }
 
     private func removeDate(date: HabitDate) {
@@ -95,7 +98,6 @@ class DiscreteHabit: ObservableObject, Identifiable, Codable {
     private func removeDate(date: Date) {
         completed_days.remove(HabitDate(date: date))
     }
-
 
     public func checkDateInCompletedDays(date: HabitDate) -> Bool {
         completed_days.contains(date)
@@ -118,12 +120,13 @@ class DiscreteHabit: ObservableObject, Identifiable, Codable {
     }
 
     public func calculateTotalProgress() -> Int {
-        var dates: Array<HabitDate> = []
+        var dates: [HabitDate] = []
         for element in completed_days {
             dates.append(element)
         }
-        if !completed_days.contains(HabitDate.today()) &&
-                   !completed_days.contains(HabitDate.yesterday()) {
+        if !completed_days.contains(HabitDate.today())
+            && !completed_days.contains(HabitDate.yesterday())
+        {
             dates.append(HabitDate.yesterday())
         }
 
@@ -132,7 +135,7 @@ class DiscreteHabit: ObservableObject, Identifiable, Codable {
         for i in 0..<dates.count - 1 {
             answer += calculateAdditionalPercent(currentPercent: answer)
             answer -= calculateFailPercent(
-                    skip_uninterrupted_days: dates[i].getDaysDifference(otherDate: dates[i + 1])
+                skip_uninterrupted_days: dates[i].getDaysDifference(otherDate: dates[i + 1])
             )
             answer = max(0, answer)
         }
@@ -143,24 +146,23 @@ class DiscreteHabit: ObservableObject, Identifiable, Codable {
         return answer
     }
 
-
     private func recalculateProgress() {
         progress = calculateTotalProgress()
         print(progress)
     }
 
     private func calculateAdditionalPercent(currentPercent: Int) -> Int {
-        if (currentPercent <= 2) {
+        if currentPercent <= 2 {
             return 5
         }
-        if (currentPercent <= 10) {
+        if currentPercent <= 10 {
             return 2
         }
         return 1
     }
 
     private func calculateFailPercent(skip_uninterrupted_days: Int) -> Int {
-        if (skip_uninterrupted_days >= 17) {
+        if skip_uninterrupted_days >= 17 {
             return 100
         }
         return Int(floor(pow(1.2, Double(skip_uninterrupted_days - 1))))

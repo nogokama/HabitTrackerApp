@@ -15,8 +15,8 @@ struct ContentView: View {
         VStack {
             HStack {
                 Text("Habit Tracker")
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
                 Spacer()
                 Button(
                     action: {
@@ -55,10 +55,10 @@ class ContentView_Previews: PreviewProvider {
     }
 
     #if DEBUG
-    @objc class func injected() {
-        let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
-        windowScene?.windows.first?.rootViewController =
+        @objc class func injected() {
+            let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
+            windowScene?.windows.first?.rootViewController =
                 UIHostingController(rootView: ContentView())
-    }
+        }
     #endif
 }
