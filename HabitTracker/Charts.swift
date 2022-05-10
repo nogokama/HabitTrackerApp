@@ -38,7 +38,7 @@ struct Line: View {
     }
 
     private func ratio(for index: Int) -> Double {
-        dataPoints[index] / highestPoint
+        (highestPoint - dataPoints[index]) / highestPoint
     }
 }
 
@@ -77,7 +77,7 @@ struct LineChartCircleView: View {
                     path.move(
                         to: CGPoint(
                             x: CGFloat(index) * width / CGFloat(dataPoints.count - 1),
-                            y: height * dataPoints[index] / highestPoint))
+                            y: height * self.ratio(for: index)))
 
                     path.addArc(
                         center: CGPoint(
@@ -93,7 +93,7 @@ struct LineChartCircleView: View {
     }
 
     private func ratio(for index: Int) -> Double {
-        dataPoints[index] / highestPoint
+        (highestPoint - dataPoints[index]) / highestPoint
     }
 }
 
@@ -111,7 +111,7 @@ struct WholeLineGraphView: View {
                 .accentColor(lineColor)
 
             LineChartCircleView(
-                dataPoints: dataPoints, radius: 5.0, forceMinValue: forceMinValue,
+                dataPoints: dataPoints, radius: 4.0, forceMinValue: forceMinValue,
                 forceMaxValue: forceMaxValue
             )
             .accentColor(outerCircleColor)
