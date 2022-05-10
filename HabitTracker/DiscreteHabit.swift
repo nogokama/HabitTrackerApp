@@ -84,13 +84,10 @@ class HabitDate: Hashable, Codable, Comparable {
     var year: Int
 }
 
-class DiscreteHabit: ObservableObject, Identifiable, Codable {
-    init(title: String = "default") {
-        self.id = UUID()
-        self.title = title
+class DiscreteHabit: BaseHabit {
+    override init(title: String = "default") {
         self.completed_days = Set()
-        self.progress = 0
-        self.habitTracker = nil
+        super.init(title: title)
         self.progress = calculateTotalProgress()
     }
 
@@ -201,8 +198,6 @@ class DiscreteHabit: ObservableObject, Identifiable, Codable {
         return Int(floor(pow(1.2, Double(skip_uninterrupted_days - 1))))
     }
 
-    var id: UUID
-    @Published var title: String
     var completed_days: Set<HabitDate> {
         didSet {
             habitTracker!.dumpAllData()
@@ -210,23 +205,18 @@ class DiscreteHabit: ObservableObject, Identifiable, Codable {
         }
     }
 
-    @Published var progress: Int
-    var habitTracker: HabitTracker?
-
     private enum CodingKeys: CodingKey {
         case id, title, completed_days
     }
 
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(UUID.self, forKey: .id)
-        title = try container.decode(String.self, forKey: .title)
-        completed_days = try container.decode(Set<HabitDate>.self, forKey: .completed_days)
-        progress = 0
-        progress = calculateTotalProgress()
+        self.completed_days = try container.decode(Set<HabitDate>.self, forKey: .completed_days)
+        try super.init(from: decoder)
+        self.progress = calculateTotalProgress()
     }
 
-    func encode(to encoder: Encoder) throws {
+    override func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
         try container.encode(title, forKey: .title)
