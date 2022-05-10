@@ -36,8 +36,8 @@ struct ContentView: View {
 
             ScrollView {
                 VStack(spacing: 20) {
-                    ForEach(habitTracker.habits) { habit in
-                        DiscreteHabitView(habit: habit)
+                    ForEach(habitTracker.getHabits()) { habit in
+                        BaseHabitView(habit: habit)
                     }
                 }
             }
