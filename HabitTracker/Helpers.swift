@@ -1,30 +1,11 @@
 import Foundation
-//
-//  Legend.swift
-//  LineChart
-//
-//  Created by András Samu on 2019. 09. 02..
-//  Copyright © 2019. András Samu. All rights reserved.
-//
-//
-//  IndicatorPoint.swift
-//  LineChart
-//
-//  Created by András Samu on 2019. 09. 03..
-//  Copyright © 2019. András Samu. All rights reserved.
-//
-//
-//  MagnifierRect.swift
-//
-//
-//  Created by Samu András on 2020. 03. 04..
-//
 import SwiftUI
 
 struct Legend: View {
     var data: [Double]
     var xData: [String]
     @Binding var frame: CGRect
+    var dataAreaWidth: CGFloat
     var hideHorizontalLines: Bool = false
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     var specifier: String = "%.0f"
@@ -36,7 +17,7 @@ struct Legend: View {
         if data.count < 2 {
             return 0
         }
-        return frame.size.width / CGFloat(data.count - 1)
+        return dataAreaWidth / CGFloat(data.count - 1)
     }
 
     var stepHeight: CGFloat {
@@ -81,7 +62,8 @@ struct Legend: View {
                     .foregroundColor(Colors.LegendText)
                     .font(.caption)
                     self.line(
-                        atHeight: self.getYLegendSafe(height: height), width: self.frame.width + 50
+                        atHeight: self.getYLegendSafe(height: height),
+                        width: self.frame.width + LineChartView.kYLegendIndent
                     )
                     .stroke(
                         self.colorScheme == .dark ? Colors.LegendDarkColor : Colors.LegendColor,

@@ -34,7 +34,6 @@ struct Line: View {
             }
             .stroke(Color.accentColor, style: StrokeStyle(lineWidth: 2, lineJoin: .round))
         }
-        .padding(.vertical)
     }
 
     private func ratio(for index: Int) -> Double {
@@ -89,7 +88,6 @@ struct LineChartCircleView: View {
             }
             .stroke(Color.accentColor, lineWidth: 2)
         }
-        .padding(.vertical)
     }
 
     private func ratio(for index: Int) -> Double {
@@ -133,11 +131,10 @@ struct LineChartView: View {
     var lineColor: Color = .red
     var outerCircleColor: Color = .red
     var innerCircleColor: Color = .white
-    var title: String = "default"
-    var legend: String = "legend"
-    @State private var currentDataNumber: Double = 0
     @State private var opacity: Double = 0
-    var valueSpecifier: String = "%.0f"
+
+    static let kChartHeight: CGFloat = 240
+    static let kYLegendIndent: CGFloat = 40
 
     public var body: some View {
         GeometryReader { geometry in
@@ -151,8 +148,10 @@ struct LineChartView: View {
                             xData: self.xDataPoints,
                             frame: .constant(
                                 CGRect(
-                                    x: 0, y: 0, width: reader.frame(in: .local).width - 50,
+                                    x: 0, y: 0, width: reader.frame(in: .local).width,
                                     height: reader.frame(in: .local).height)),
+                            dataAreaWidth: reader.frame(in: .local).width
+                                - LineChartView.kYLegendIndent,
                             forceMinValue: forceMinValue, forceMaxValue: forceMaxValue
                         )
 
@@ -161,16 +160,18 @@ struct LineChartView: View {
                             forceMaxValue: forceMaxValue
                         )
                         .frame(
-                            width: reader.frame(in: .local).width - 50,
-                            height: reader.frame(in: .local).height + 28
+                            width: reader.frame(in: .local).width - LineChartView.kYLegendIndent,
+                            height: reader.frame(in: .local).height
                         )
-                        .offset(x: 40, y: -11)
+                        .offset(x: LineChartView.kYLegendIndent, y: 0)
                     }
-                    .frame(width: geometry.frame(in: .local).size.width, height: 240)
-                    .offset(x: 0, y: 40)
-
+                    .frame(
+                        width: geometry.frame(in: .local).size.width,
+                        height: LineChartView.kChartHeight)
                 }
-                .frame(width: geometry.frame(in: .local).size.width, height: 240)
+                .frame(
+                    width: geometry.frame(in: .local).size.width, height: LineChartView.kChartHeight
+                )
             }
         }
     }
