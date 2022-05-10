@@ -33,6 +33,17 @@ struct ContentView: View {
                 )
                 .padding(.trailing)
             }.padding()
+            
+            HStack {
+                Spacer()
+                HStack(spacing: 0) {
+                    ForEach(0..<TappingButtonsView.totalButtonsCount) { position in
+                        Text(getWeekday(fromToday: TappingButtonsView.totalButtonsCount - position - 1))
+                            .fontWeight(.bold)
+                            .frame(width: 40)
+                    }
+                }.padding(.trailing)
+            }.padding(.trailing)
 
             ScrollView {
                 VStack(spacing: 20) {
@@ -46,6 +57,27 @@ struct ContentView: View {
         }.sheet(isPresented: $showingAddingHabitWindow) {
             CreatingHabitView(habitTracker: self.habitTracker)
         }
+    }
+    
+    static let weekdays = [
+        "Sun",
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri",
+        "Sat",
+    ]
+    
+    private func getWeekday(fromToday: Int) -> String {
+        print("requested weekday for position \(fromToday)")
+        let today = Date()
+        var dateComponent = DateComponents()
+        dateComponent.day = -fromToday
+        
+        let targetDate = Calendar.current.date(byAdding: dateComponent, to: today)!
+        
+        return Self.weekdays[Calendar.current.component(.weekday, from: targetDate) - 1]
     }
 }
 
