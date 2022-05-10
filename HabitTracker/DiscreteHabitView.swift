@@ -10,6 +10,7 @@ import SwiftUI
 
 struct DiscreteHabitView: View {
     @ObservedObject var habit: DiscreteHabit
+    @State var showingDetailsView: Bool = false
 
     init(habit: DiscreteHabit) {
         self.habit = habit
@@ -20,6 +21,7 @@ struct DiscreteHabitView: View {
             Button(
                 action: {
                     print("Large button tapped")
+                    showingDetailsView = true
                 },
                 label: {
                     VStack(spacing: 20) {
@@ -50,6 +52,9 @@ struct DiscreteHabitView: View {
                 }
             }
             .padding()
+        }
+        .sheet(isPresented: $showingDetailsView) {
+            HabitDetailsView(habit: habit)
         }
     }
 }
