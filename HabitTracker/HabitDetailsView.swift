@@ -13,7 +13,7 @@ struct HabitDetailsView: View {
     let analyzeDaysCount: Int = 13
 
     var yDataValues: [Double] {
-        [0, 25, 50, 75, 100] + habit.calculateProgressForNLastDays(days: self.analyzeDaysCount - 5)
+        habit.calculateProgressForNLastDays(days: self.analyzeDaysCount)
     }
     var xDataPoints: [String] {
         return HabitDate.getNLastDays(days: self.analyzeDaysCount)
