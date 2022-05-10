@@ -70,6 +70,15 @@ class HabitDate: Hashable, Codable, Comparable {
         getDateFromToday(byAddingDays: -1)
     }
 
+    static func getNLastDays(days: Int) -> [String] {
+        var ans: [String] = []
+        for i in stride(from: days - 1, to: -1, by: -1) {
+            let date = getDateFromToday(byAddingDays: -i)
+            ans.append("\(String(format: "%02d", date.day)).\(String(format: "%02d", date.month))")
+        }
+        return ans
+    }
+
     var day: Int
     var month: Int
     var year: Int
@@ -119,10 +128,12 @@ class DiscreteHabit: ObservableObject, Identifiable, Codable {
         completed_days.contains(HabitDate.getDateFromToday(byAddingDays: -position))
     }
 
-    public func calculateTotalProgress() -> Int {
+    public func calculateTotalProgressByDate(targetDate: HabitDate) -> Int {
         var dates: [HabitDate] = []
         for element in completed_days {
-            dates.append(element)
+            if element <= targetDate {
+                dates.append(element)
+            }
         }
         if !completed_days.contains(HabitDate.today())
             && !completed_days.contains(HabitDate.yesterday())
@@ -132,6 +143,9 @@ class DiscreteHabit: ObservableObject, Identifiable, Codable {
 
         dates.sort()
         var answer = 0
+        if dates.count == 0 {
+            return answer
+        }
         for i in 0..<dates.count - 1 {
             answer += calculateAdditionalPercent(currentPercent: answer)
             answer -= calculateFailPercent(
@@ -140,10 +154,29 @@ class DiscreteHabit: ObservableObject, Identifiable, Codable {
             answer = max(0, answer)
         }
 
-        if completed_days.contains(dates[dates.count - 1]) {
+        if completed_days.contains(dates[dates.count - 1]) && dates[dates.count - 1] <= targetDate {
             answer += calculateAdditionalPercent(currentPercent: answer)
         }
         return answer
+    }
+
+    public func calculateTotalProgressNDaysAgo(days: Int) -> Int {
+        calculateTotalProgressByDate(targetDate: HabitDate.getDateFromToday(byAddingDays: days))
+    }
+
+    public func calculateTotalProgress() -> Int {
+        calculateTotalProgressByDate(targetDate: HabitDate.today())
+    }
+
+    public func calculateProgressForNLastDays(days: Int) -> [Double] {
+        var ans: [Double] = []
+        for i in stride(from: days - 1, through: -1, by: -1) {
+            ans.append(
+                Double(
+                    calculateTotalProgressByDate(
+                        targetDate: HabitDate.getDateFromToday(byAddingDays: -i))))
+        }
+        return ans
     }
 
     private func recalculateProgress() {

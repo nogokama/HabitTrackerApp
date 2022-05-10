@@ -162,9 +162,9 @@ struct LineChartView: View {
                         )
                         .frame(
                             width: reader.frame(in: .local).width - 50,
-                            height: reader.frame(in: .local).height
+                            height: reader.frame(in: .local).height + 28
                         )
-                        .offset(x: 40, y: -20)
+                        .offset(x: 40, y: -11)
                     }
                     .frame(width: geometry.frame(in: .local).size.width, height: 240)
                     .offset(x: 0, y: 40)

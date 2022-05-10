@@ -10,11 +10,14 @@ struct HabitDetailsView: View {
     @ObservedObject var habit: DiscreteHabit
     @State var showingChangingView: Bool = false
 
-    var demoData: [Double] = [8, 2, 4, 6, 12, 9, 2, 8, 2, 4, 6, 12, 9]
-    var xDataPoints: [String] = [
-        "31.12", "01.02", "03.04", "05.06", "01.02", "03.04", "05.06", "31.12", "01.02", "03.04",
-        "05.06", "01.02", "03.04",
-    ]
+    let analyzeDaysCount: Int = 13
+
+    var yDataValues: [Double] {
+        return habit.calculateProgressForNLastDays(days: self.analyzeDaysCount)
+    }
+    var xDataPoints: [String] {
+        return HabitDate.getNLastDays(days: self.analyzeDaysCount)
+    }
 
     init(habit: DiscreteHabit) {
         self.habit = habit
@@ -24,7 +27,7 @@ struct HabitDetailsView: View {
         NavigationView {
             VStack {
                 LineChartView(
-                    dataPoints: demoData, xDataPoints: xDataPoints, forceMinValue: 0,
+                    dataPoints: yDataValues, xDataPoints: xDataPoints, forceMinValue: 0,
                     forceMaxValue: 100
                 )
                 .padding()
