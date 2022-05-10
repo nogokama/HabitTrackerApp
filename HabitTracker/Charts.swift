@@ -142,7 +142,6 @@ struct LineChartView: View {
     public var body: some View {
         GeometryReader { geometry in
             VStack(alignment: .leading, spacing: 8) {
-                Text(self.title)
                 ZStack {
                     GeometryReader { reader in
                         Rectangle()

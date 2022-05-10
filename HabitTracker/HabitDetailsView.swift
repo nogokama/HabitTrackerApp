@@ -10,8 +10,11 @@ struct HabitDetailsView: View {
     @ObservedObject var habit: DiscreteHabit
     @State var showingChangingView: Bool = false
 
-    var demoData: [Double] = [8, 2, 4, 6, 12, 9, 2]
-    var xDataPoints: [String] = ["31.12", "01.02", "03.04", "05.06", "01.02", "03.04", "05.06"]
+    var demoData: [Double] = [8, 2, 4, 6, 12, 9, 2, 8, 2, 4, 6, 12, 9]
+    var xDataPoints: [String] = [
+        "31.12", "01.02", "03.04", "05.06", "01.02", "03.04", "05.06", "31.12", "01.02", "03.04",
+        "05.06", "01.02", "03.04",
+    ]
 
     init(habit: DiscreteHabit) {
         self.habit = habit

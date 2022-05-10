@@ -81,7 +81,7 @@ struct Legend: View {
                     .foregroundColor(Colors.LegendText)
                     .font(.caption)
                     self.line(
-                        atHeight: self.getYLegendSafe(height: height), width: self.frame.width
+                        atHeight: self.getYLegendSafe(height: height), width: self.frame.width + 50
                     )
                     .stroke(
                         self.colorScheme == .dark ? Colors.LegendDarkColor : Colors.LegendColor,
