@@ -23,7 +23,7 @@ class HabitTracker: ObservableObject {
         }
     }
 
-    public func getHabits() -> [DiscreteHabit] {
+    public func getHabits() -> [BaseHabit] {
         return self.habits
     }
 
