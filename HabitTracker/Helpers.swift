@@ -27,8 +27,10 @@ struct Legend: View {
     @Binding var frame: CGRect
     var hideHorizontalLines: Bool = false
     @Environment(\.colorScheme) var colorScheme: ColorScheme
-    var specifier: String = "%.2f"
+    var specifier: String = "%.0f"
     let padding: CGFloat = 3
+    var forceMinValue: Double? = nil
+    var forceMaxValue: Double? = nil
 
     var stepWidth: CGFloat {
         if data.count < 2 {
@@ -39,7 +41,19 @@ struct Legend: View {
 
     var stepHeight: CGFloat {
         let points = self.data
-        if let min = points.min(), let max = points.max(), min != max {
+        var max: Double
+        var min: Double
+        if forceMaxValue != nil {
+            max = forceMaxValue!
+        } else {
+            max = points.max()!
+        }
+        if forceMinValue != nil {
+            min = forceMinValue!
+        } else {
+            min = points.min()!
+        }
+        if min != max {
             if min < 0 {
                 return (frame.size.height - padding) / CGFloat(max - min)
             } else {
@@ -51,6 +65,9 @@ struct Legend: View {
 
     var min: CGFloat {
         let points = self.data
+        if forceMinValue != nil {
+            return CGFloat(forceMinValue!)
+        }
         return CGFloat(points.min() ?? 0)
     }
 
@@ -120,8 +137,14 @@ struct Legend: View {
 
     func getYLegend() -> [Double]? {
         let points = self.data
-        guard let max = points.max() else { return nil }
-        guard let min = points.min() else { return nil }
+        guard var max = points.max() else { return nil }
+        guard var min = points.min() else { return nil }
+        if forceMinValue != nil {
+            min = forceMinValue!
+        }
+        if forceMaxValue != nil {
+            max = forceMaxValue!
+        }
         let step = Double(max - min) / 4
         return [min + step * 0, min + step * 1, min + step * 2, min + step * 3, min + step * 4]
     }

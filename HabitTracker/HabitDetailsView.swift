@@ -20,8 +20,11 @@ struct HabitDetailsView: View {
     var body: some View {
         NavigationView {
             VStack {
-                LineChartView(dataPoints: demoData, xDataPoints: xDataPoints)
-                    .padding()
+                LineChartView(
+                    dataPoints: demoData, xDataPoints: xDataPoints, forceMinValue: 0,
+                    forceMaxValue: 100
+                )
+                .padding()
             }
             .navigationBarTitle(habit.title)
             .navigationBarItems(

@@ -3,8 +3,13 @@ import SwiftUI
 
 struct Line: View {
     var dataPoints: [Double]
+    var forceMinValue: Double? = nil
+    var forceMaxValue: Double? = nil
 
     var highestPoint: Double {
+        if forceMaxValue != nil {
+            return forceMaxValue!
+        }
         let max = dataPoints.max() ?? 1.0
         if max == 0 {
             return 1.0
@@ -40,8 +45,14 @@ struct Line: View {
 struct LineChartCircleView: View {
     var dataPoints: [Double]
     var radius: CGFloat
+    var forceMinValue: Double? = nil
+    var forceMaxValue: Double? = nil
 
     var highestPoint: Double {
+        if forceMaxValue != nil {
+            return forceMaxValue!
+        }
+
         let max = dataPoints.max() ?? 1.0
         if max == 0 {
             return 1.0
@@ -88,20 +99,28 @@ struct LineChartCircleView: View {
 
 struct WholeLineGraphView: View {
     var dataPoints: [Double]
+    var forceMinValue: Double? = nil
+    var forceMaxValue: Double? = nil
     var lineColor = Color.red
     var innerCircleColor = Color.white
     var outerCircleColor = Color.red
 
     var body: some View {
         ZStack {
-            Line(dataPoints: dataPoints)
+            Line(dataPoints: dataPoints, forceMinValue: forceMinValue, forceMaxValue: forceMaxValue)
                 .accentColor(lineColor)
 
-            LineChartCircleView(dataPoints: dataPoints, radius: 5.0)
-                .accentColor(outerCircleColor)
+            LineChartCircleView(
+                dataPoints: dataPoints, radius: 5.0, forceMinValue: forceMinValue,
+                forceMaxValue: forceMaxValue
+            )
+            .accentColor(outerCircleColor)
 
-            LineChartCircleView(dataPoints: dataPoints, radius: 2.0)
-                .accentColor(innerCircleColor)
+            LineChartCircleView(
+                dataPoints: dataPoints, radius: 2.0, forceMinValue: forceMinValue,
+                forceMaxValue: forceMaxValue
+            )
+            .accentColor(innerCircleColor)
         }
     }
 }
@@ -109,6 +128,8 @@ struct WholeLineGraphView: View {
 struct LineChartView: View {
     var dataPoints: [Double]
     var xDataPoints: [String]
+    var forceMinValue: Double? = nil
+    var forceMaxValue: Double? = nil
     var lineColor: Color = .red
     var outerCircleColor: Color = .red
     var innerCircleColor: Color = .white
@@ -116,7 +137,7 @@ struct LineChartView: View {
     var legend: String = "legend"
     @State private var currentDataNumber: Double = 0
     @State private var opacity: Double = 0
-    var valueSpecifier: String = "%.1f"
+    var valueSpecifier: String = "%.0f"
 
     public var body: some View {
         GeometryReader { geometry in
@@ -132,15 +153,19 @@ struct LineChartView: View {
                             frame: .constant(
                                 CGRect(
                                     x: 0, y: 0, width: reader.frame(in: .local).width - 50,
-                                    height: reader.frame(in: .local).height))
+                                    height: reader.frame(in: .local).height)),
+                            forceMinValue: forceMinValue, forceMaxValue: forceMaxValue
                         )
 
-                        WholeLineGraphView(dataPoints: dataPoints)
-                            .frame(
-                                width: reader.frame(in: .local).width - 50,
-                                height: reader.frame(in: .local).height
-                            )
-                            .offset(x: 40, y: -20)
+                        WholeLineGraphView(
+                            dataPoints: dataPoints, forceMinValue: forceMinValue,
+                            forceMaxValue: forceMaxValue
+                        )
+                        .frame(
+                            width: reader.frame(in: .local).width - 50,
+                            height: reader.frame(in: .local).height
+                        )
+                        .offset(x: 40, y: -20)
                     }
                     .frame(width: geometry.frame(in: .local).size.width, height: 240)
                     .offset(x: 0, y: 40)
