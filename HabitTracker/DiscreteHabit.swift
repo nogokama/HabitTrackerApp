@@ -70,6 +70,33 @@ class HabitDate: Hashable, Codable, Comparable {
         getDateFromToday(byAddingDays: -1)
     }
 
+    static let weekdays = [
+        "Sun",
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri",
+        "Sat",
+    ]
+
+    private static func getSwiftDateFromToday(fromToday: Int) -> Date {
+        let today = Date()
+        var dateComponent = DateComponents()
+        dateComponent.day = -fromToday
+        return Calendar.current.date(byAdding: dateComponent, to: today)!
+    }
+
+    static func getWeekday(fromToday: Int) -> String {
+        let targetDate = getSwiftDateFromToday(fromToday: fromToday)
+        return Self.weekdays[Calendar.current.component(.weekday, from: targetDate) - 1]
+    }
+
+    static func getDay(fromToday: Int) -> String {
+        let targetDate = getSwiftDateFromToday(fromToday: fromToday)
+        return String(format: "%02d", Calendar.current.component(.day, from: targetDate))
+    }
+
     var day: Int
     var month: Int
     var year: Int
