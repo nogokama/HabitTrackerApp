@@ -67,7 +67,7 @@ struct HabitChangingView: View {
                                         self.enteredName = habit.title
                                     }
                             }
-                            if enteredName == "" {
+                            if enteredName.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
                                 Text("Name cannot be empty")
                                     .foregroundColor(.red)
                                     .font(.caption)
@@ -96,8 +96,8 @@ struct HabitChangingView: View {
             )
             .navigationBarItems(
                 trailing: Button("Save") {
-                    if enteredName != "" {
-                        habit.title = enteredName
+                    if enteredName.trimmingCharacters(in: .whitespacesAndNewlines) != "" {
+                        habit.title = enteredName.trimmingCharacters(in: .whitespacesAndNewlines)
                         self.presentationMode.wrappedValue.dismiss()
                     }
                 })
