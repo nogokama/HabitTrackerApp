@@ -9,7 +9,6 @@ struct HabitDetailsView: View {
     @Environment(\.presentationMode) var presentationMode
     @ObservedObject var habit: DiscreteHabit
     @Binding var showingHabitDetailsView: Bool
-
     @State var showingChangingView: Bool = false
 
     let analyzeDaysCount: Int = 13
@@ -26,7 +25,7 @@ struct HabitDetailsView: View {
             VStack {
                 LineChartView(
                     dataPoints: yDataValues, xDataPoints: xDataPoints, forceMinValue: 0,
-                    forceMaxValue: 100
+                    forceMaxValue: 100, habit: habit
                 )
                 .padding()
             }
@@ -42,8 +41,19 @@ struct HabitDetailsView: View {
                 })
         }
         .sheet(isPresented: $showingChangingView) {
-            HabitChangingView(habit: habit, showingHabitDetailsView: $showingHabitDetailsView)
+            HabitChangingView(
+                habit: habit,
+                showingHabitDetailsView: $showingHabitDetailsView)
         }
+    }
+}
+
+struct MiniCircle: View {
+    let color: Color
+    var body: some View {
+        Circle()
+            .foregroundColor(color)
+            .frame(width: 30, height: 30)
     }
 }
 
@@ -53,19 +63,24 @@ struct HabitChangingView: View {
     @Binding var showingHabitDetailsView: Bool
 
     @State var enteredName: String = ""
+    @State private var colorSelected: Int = 0
+
+    init(habit: DiscreteHabit, showingHabitDetailsView: Binding<Bool>) {
+        self.habit = habit
+        self._showingHabitDetailsView = showingHabitDetailsView
+        self._enteredName = State(initialValue: habit.title)
+        self._colorSelected = State(initialValue: habit.colorStyleNumber)
+    }
 
     var body: some View {
         NavigationView {
             VStack {
                 Form {
-                    Section("General") {
+                    Section("GENERAL") {
                         VStack {
                             HStack {
                                 Text("Name:")
                                 TextField("Habit Name", text: $enteredName)
-                                    .onAppear {
-                                        self.enteredName = habit.title
-                                    }
                             }
                             if enteredName.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
                                 Text("Name cannot be empty")
@@ -73,6 +88,14 @@ struct HabitChangingView: View {
                                     .font(.caption)
                             }
                         }
+
+                        Picker("Color", selection: $colorSelected) {
+                            ForEach(0..<ColorStyles.allStyles.count) { number in
+                                MiniCircle(color: ColorStyles.allStyles[number].mainColor)
+                                    .tag(number)
+                            }
+                        }
+
                     }
                     Section("Other") {
                         Button(
@@ -86,6 +109,7 @@ struct HabitChangingView: View {
                                     .foregroundColor(.red)
                             })
                     }
+
                 }
             }
             .navigationBarTitle("Settings")
@@ -98,6 +122,7 @@ struct HabitChangingView: View {
                 trailing: Button("Save") {
                     if enteredName.trimmingCharacters(in: .whitespacesAndNewlines) != "" {
                         habit.title = enteredName.trimmingCharacters(in: .whitespacesAndNewlines)
+                        habit.colorStyleNumber = colorSelected
                         self.presentationMode.wrappedValue.dismiss()
                     }
                 })

@@ -99,26 +99,24 @@ struct WholeLineGraphView: View {
     var dataPoints: [Double]
     var forceMinValue: Double? = nil
     var forceMaxValue: Double? = nil
-    var lineColor = Color.red
-    var innerCircleColor = Color.white
-    var outerCircleColor = Color.red
+    @ObservedObject var habit: BaseHabit
 
     var body: some View {
         ZStack {
             Line(dataPoints: dataPoints, forceMinValue: forceMinValue, forceMaxValue: forceMaxValue)
-                .accentColor(lineColor)
+                .accentColor(ColorStyles.allStyles[habit.colorStyleNumber].mainColor)
 
             LineChartCircleView(
                 dataPoints: dataPoints, radius: 4.0, forceMinValue: forceMinValue,
                 forceMaxValue: forceMaxValue
             )
-            .accentColor(outerCircleColor)
+            .accentColor(ColorStyles.allStyles[habit.colorStyleNumber].mainColor)
 
             LineChartCircleView(
                 dataPoints: dataPoints, radius: 2.0, forceMinValue: forceMinValue,
                 forceMaxValue: forceMaxValue
             )
-            .accentColor(innerCircleColor)
+            .accentColor(.white)
         }
     }
 }
@@ -128,10 +126,9 @@ struct LineChartView: View {
     var xDataPoints: [String]
     var forceMinValue: Double? = nil
     var forceMaxValue: Double? = nil
-    var lineColor: Color = .red
-    var outerCircleColor: Color = .red
     var innerCircleColor: Color = .white
     @State private var opacity: Double = 0
+    @ObservedObject var habit: BaseHabit
 
     static let kChartHeight: CGFloat = 240
     static let kYLegendIndent: CGFloat = 40
@@ -157,7 +154,7 @@ struct LineChartView: View {
 
                         WholeLineGraphView(
                             dataPoints: dataPoints, forceMinValue: forceMinValue,
-                            forceMaxValue: forceMaxValue
+                            forceMaxValue: forceMaxValue, habit: habit
                         )
                         .frame(
                             width: reader.frame(in: .local).width - LineChartView.kYLegendIndent,
