@@ -95,6 +95,7 @@ class HabitDate: Hashable, Codable, Comparable {
     static func getDay(fromToday: Int) -> String {
         let targetDate = getSwiftDateFromToday(fromToday: fromToday)
         return String(format: "%02d", Calendar.current.component(.day, from: targetDate))
+    }
 
     static func getNLastDays(days: Int) -> [String] {
         var ans: [String] = []
