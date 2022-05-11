@@ -34,6 +34,26 @@ struct ContentView: View {
                 .padding(.trailing)
             }.padding()
 
+            HStack {
+                Spacer()
+                HStack(spacing: 0) {
+                    ForEach(0..<TappingButtonsView.totalButtonsCount) { position in
+                        VStack(spacing: 0) {
+                            Text(
+                                HabitDate.getWeekday(
+                                    fromToday: TappingButtonsView.totalButtonsCount - position - 1)
+                            )
+                            .fontWeight(.bold)
+                            Text(
+                                HabitDate.getDay(
+                                    fromToday: TappingButtonsView.totalButtonsCount - position - 1))
+                        }.frame(width: 40)
+                    }
+                }.padding(.trailing)
+            }
+            .padding(.leading)
+            .padding(.trailing)
+
             ScrollView {
                 VStack(spacing: 20) {
                     ForEach(habitTracker.getHabits()) { habit in

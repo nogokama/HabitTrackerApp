@@ -75,7 +75,7 @@ class DiscreteHabitView_Previews: PreviewProvider {
 
 struct TappingButtonsView: View {
     let habit: DiscreteHabit
-    let totalButtonsCount = 4
+    static let totalButtonsCount: Int = 4
 
     init(habit: DiscreteHabit) {
         self.habit = habit
@@ -83,15 +83,13 @@ struct TappingButtonsView: View {
 
     var body: some View {
         HStack(spacing: 0) {
-            ForEach(0..<totalButtonsCount) { element in
+            ForEach(0..<Self.totalButtonsCount) { element in
                 SingleTypingButtonView(
                     habit: habit,
-                    position: totalButtonsCount - element
+                    position: Self.totalButtonsCount - element
                 )
             }
         }
-        .padding(.leading)
-        .padding(.trailing)
     }
 }
 
