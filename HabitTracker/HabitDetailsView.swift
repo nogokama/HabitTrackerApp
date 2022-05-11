@@ -8,6 +8,8 @@ import SwiftUI
 struct HabitDetailsView: View {
     @Environment(\.presentationMode) var presentationMode
     @ObservedObject var habit: DiscreteHabit
+    @Binding var showingHabitDetailsView: Bool
+
     @State var showingChangingView: Bool = false
 
     let analyzeDaysCount: Int = 13
@@ -17,10 +19,6 @@ struct HabitDetailsView: View {
     }
     var xDataPoints: [String] {
         return HabitDate.getNLastDays(days: self.analyzeDaysCount)
-    }
-
-    init(habit: DiscreteHabit) {
-        self.habit = habit
     }
 
     var body: some View {
@@ -44,46 +42,72 @@ struct HabitDetailsView: View {
                 })
         }
         .sheet(isPresented: $showingChangingView) {
-            HabitChangingView(habit: habit)
+            HabitChangingView(habit: habit, showingHabitDetailsView: $showingHabitDetailsView)
         }
     }
 }
 
 struct HabitChangingView: View {
+    @Environment(\.presentationMode) var presentationMode
     @ObservedObject var habit: DiscreteHabit
-    @State var enteredName: String
+    @Binding var showingHabitDetailsView: Bool
 
-    init(habit: DiscreteHabit) {
-        self.habit = habit
-        self.enteredName = habit.title
-    }
+    @State var enteredName: String = ""
 
     var body: some View {
         NavigationView {
-            Form {
-                Section("General") {
-                    HStack {
-                        Text("Name:")
-                        TextField("Habit Name", text: $enteredName)
+            VStack {
+                Form {
+                    Section("General") {
+                        VStack {
+                            HStack {
+                                Text("Name:")
+                                TextField("Habit Name", text: $enteredName)
+                                    .onAppear {
+                                        self.enteredName = habit.title
+                                    }
+                            }
+                            if enteredName.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
+                                Text("Name cannot be empty")
+                                    .foregroundColor(.red)
+                                    .font(.caption)
+                            }
+                        }
+                    }
+                    Section("Other") {
+                        Button(
+                            action: {
+                                habit.archive()
+                                self.showingHabitDetailsView = false
+                                self.presentationMode.wrappedValue.dismiss()
+                            },
+                            label: {
+                                Text("Archive Habit")
+                                    .foregroundColor(.red)
+                            })
                     }
                 }
-                Section("Other") {
-                    Button(
-                        action: {
-                        },
-                        label: {
-                            Text("Archive Habit")
-                                .foregroundColor(.red)
-                        })
-                }
             }
+            .navigationBarTitle("Settings")
+            .navigationBarItems(
+                leading: Button("Back") {
+                    self.presentationMode.wrappedValue.dismiss()
+                }
+            )
+            .navigationBarItems(
+                trailing: Button("Save") {
+                    if enteredName.trimmingCharacters(in: .whitespacesAndNewlines) != "" {
+                        habit.title = enteredName.trimmingCharacters(in: .whitespacesAndNewlines)
+                        self.presentationMode.wrappedValue.dismiss()
+                    }
+                })
         }
     }
 }
 
 class HabitDetailsView_Previews: PreviewProvider {
     static var previews: some View {
-        HabitDetailsView(habit: DiscreteHabit())
+        HabitDetailsView(habit: DiscreteHabit(), showingHabitDetailsView: .constant(false))
     }
 
     #if DEBUG
@@ -91,7 +115,8 @@ class HabitDetailsView_Previews: PreviewProvider {
             let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
             windowScene?.windows.first?.rootViewController =
                 UIHostingController(
-                    rootView: HabitDetailsView(habit: DiscreteHabit())
+                    rootView: HabitDetailsView(
+                        habit: DiscreteHabit(), showingHabitDetailsView: .constant((false)))
                 )
         }
     #endif

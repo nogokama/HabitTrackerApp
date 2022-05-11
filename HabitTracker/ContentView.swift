@@ -57,7 +57,9 @@ struct ContentView: View {
             ScrollView {
                 VStack(spacing: 20) {
                     ForEach(habitTracker.getHabits()) { habit in
-                        BaseHabitView(habit: habit)
+                        if !habit.isArchived() {
+                            BaseHabitView(habit: habit)
+                        }
                     }
                 }
             }
