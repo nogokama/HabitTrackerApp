@@ -59,12 +59,19 @@ struct HabitChangingView: View {
             VStack {
                 Form {
                     Section("General") {
-                        HStack {
-                            Text("Name:")
-                            TextField("Habit Name", text: $enteredName)
-                                .onAppear {
-                                    self.enteredName = habit.title
-                                }
+                        VStack {
+                            HStack {
+                                Text("Name:")
+                                TextField("Habit Name", text: $enteredName)
+                                    .onAppear {
+                                        self.enteredName = habit.title
+                                    }
+                            }
+                            if enteredName == "" {
+                                Text("Name cannot be empty")
+                                    .foregroundColor(.red)
+                                    .font(.caption)
+                            }
                         }
                     }
                     Section("Other") {
@@ -89,8 +96,10 @@ struct HabitChangingView: View {
             )
             .navigationBarItems(
                 trailing: Button("Save") {
-                    print("Settings saved!")
-                    self.presentationMode.wrappedValue.dismiss()
+                    if enteredName != "" {
+                        habit.title = enteredName
+                        self.presentationMode.wrappedValue.dismiss()
+                    }
                 })
         }
     }
