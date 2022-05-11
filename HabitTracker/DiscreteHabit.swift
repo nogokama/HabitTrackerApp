@@ -206,7 +206,7 @@ class DiscreteHabit: BaseHabit {
     }
 
     private enum CodingKeys: CodingKey {
-        case id, title, completed_days
+        case id, title, completed_days, archived
     }
 
     required init(from decoder: Decoder) throws {
@@ -221,5 +221,6 @@ class DiscreteHabit: BaseHabit {
         try container.encode(id, forKey: .id)
         try container.encode(title, forKey: .title)
         try container.encode(completed_days, forKey: .completed_days)
+        try container.encode(archived, forKey: .archived)
     }
 }

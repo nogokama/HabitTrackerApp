@@ -18,6 +18,12 @@ class HabitTracker: ObservableObject {
                 self.habits = decoded
             }
         }
+        self.publishedHabits = []
+        for habit in self.habits {
+            if !habit.isArchived() {
+                self.publishedHabits.append(habit)
+            }
+        }
         for habit in self.habits {
             habit.habitTracker = self
         }
@@ -29,6 +35,17 @@ class HabitTracker: ObservableObject {
 
     public func addNewHabit(habit: DiscreteHabit) {
         self.habits.append(habit)
+        if !habit.isArchived() {
+            self.publishedHabits.append(habit)
+        }
+    }
+
+    public func markHabitArchived(habit: BaseHabit) {
+        self.publishedHabits.remove(
+            at: self.publishedHabits.firstIndex(where: { (h: DiscreteHabit) -> Bool in
+                return h.id == habit.id
+            })!
+        )
     }
 
     public func dumpAllData() {
@@ -40,7 +57,13 @@ class HabitTracker: ObservableObject {
         print("I am dumped!")
     }
 
-    @Published var habits: [DiscreteHabit] {
+    var habits: [DiscreteHabit] {
+        didSet {
+            dumpAllData()
+        }
+    }
+
+    @Published var publishedHabits: [DiscreteHabit] {
         didSet {
             dumpAllData()
         }

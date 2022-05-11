@@ -54,7 +54,7 @@ struct DiscreteHabitView: View {
             .padding()
         }
         .sheet(isPresented: $showingDetailsView) {
-            HabitDetailsView(habit: habit)
+            HabitDetailsView(habit: habit, showingHabitDetailsView: $showingDetailsView)
         }
     }
 }
