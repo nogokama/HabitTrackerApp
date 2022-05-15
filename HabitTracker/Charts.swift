@@ -1,6 +1,25 @@
 import Foundation
 import SwiftUI
 
+class ChartData: ObservableObject {
+    @Published var xLabels: [String]
+    @Published var yValues: [Double]
+
+    init(xLabels: [String], yValues: [Double]) {
+        self.xLabels = xLabels
+        self.yValues = yValues
+    }
+
+    public func addPoint(xLabel: String, yValue: Double) {
+        self.xLabels.append(xLabel)
+        self.yValues.append(yValue)
+    }
+
+    public func pointsCount() -> Int {
+        xLabels.count
+    }
+}
+
 struct Line: View {
     var dataPoints: [Double]
     var forceMinValue: Double? = nil
@@ -96,24 +115,27 @@ struct LineChartCircleView: View {
 }
 
 struct WholeLineGraphView: View {
-    var dataPoints: [Double]
+    @ObservedObject var chartData: ChartData
     var forceMinValue: Double? = nil
     var forceMaxValue: Double? = nil
     @Binding var colorStyleNumber: Int
 
     var body: some View {
         ZStack {
-            Line(dataPoints: dataPoints, forceMinValue: forceMinValue, forceMaxValue: forceMaxValue)
-                .accentColor(ColorStyles.allStyles[colorStyleNumber].mainColor)
-
-            LineChartCircleView(
-                dataPoints: dataPoints, radius: 4.0, forceMinValue: forceMinValue,
+            Line(
+                dataPoints: chartData.yValues, forceMinValue: forceMinValue,
                 forceMaxValue: forceMaxValue
             )
             .accentColor(ColorStyles.allStyles[colorStyleNumber].mainColor)
 
             LineChartCircleView(
-                dataPoints: dataPoints, radius: 2.0, forceMinValue: forceMinValue,
+                dataPoints: chartData.yValues, radius: 4.0, forceMinValue: forceMinValue,
+                forceMaxValue: forceMaxValue
+            )
+            .accentColor(ColorStyles.allStyles[colorStyleNumber].mainColor)
+
+            LineChartCircleView(
+                dataPoints: chartData.yValues, radius: 2.0, forceMinValue: forceMinValue,
                 forceMaxValue: forceMaxValue
             )
             .accentColor(.white)
@@ -122,8 +144,7 @@ struct WholeLineGraphView: View {
 }
 
 struct LineChartView: View {
-    var dataPoints: [Double]
-    var xDataPoints: [String]
+    @ObservedObject var chartData: ChartData
     var forceMinValue: Double? = nil
     var forceMaxValue: Double? = nil
     var innerCircleColor: Color = .white
@@ -141,8 +162,7 @@ struct LineChartView: View {
                         Rectangle()
                             .foregroundColor(.white)
                         Legend(
-                            data: self.dataPoints,
-                            xData: self.xDataPoints,
+                            chartData: chartData,
                             frame: .constant(
                                 CGRect(
                                     x: 0, y: 0, width: reader.frame(in: .local).width,
@@ -153,7 +173,7 @@ struct LineChartView: View {
                         )
 
                         WholeLineGraphView(
-                            dataPoints: dataPoints, forceMinValue: forceMinValue,
+                            chartData: chartData, forceMinValue: forceMinValue,
                             forceMaxValue: forceMaxValue, colorStyleNumber: $colorStyleNumber
                         )
                         .frame(

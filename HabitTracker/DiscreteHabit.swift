@@ -97,11 +97,15 @@ class HabitDate: Hashable, Codable, Comparable {
         return String(format: "%02d", Calendar.current.component(.day, from: targetDate))
     }
 
+    static func getShortStringDate(date: HabitDate) -> String {
+        "\(String(format: "%02d", date.day)).\(String(format: "%02d", date.month))"
+    }
+
     static func getNLastDays(days: Int) -> [String] {
         var ans: [String] = []
         for i in stride(from: days - 1, to: -1, by: -1) {
             let date = getDateFromToday(byAddingDays: -i)
-            ans.append("\(String(format: "%02d", date.day)).\(String(format: "%02d", date.month))")
+            ans.append(HabitDate.getShortStringDate(date: date))
         }
         return ans
     }
@@ -201,6 +205,31 @@ class DiscreteHabit: BaseHabit {
                         targetDate: HabitDate.getDateFromToday(byAddingDays: -i))))
         }
         return ans
+    }
+
+    public func calculateProgressPerStepDays(stepDays: Int, pointsCount: Int) -> ChartData {
+        let data = ChartData(xLabels: [], yValues: [])
+        for shift in stride(from: stepDays * (pointsCount - 1), through: 0, by: -stepDays) {
+            data.addPoint(
+                xLabel: HabitDate.getShortStringDate(
+                    date: HabitDate.getDateFromToday(byAddingDays: -shift)),
+                yValue: Double(
+                    self.calculateTotalProgressByDate(
+                        targetDate: HabitDate.getDateFromToday(byAddingDays: -shift))))
+        }
+        return data
+    }
+
+    public func calculateProgressPerPeriod(periodInDaysFromToday: Int, pointsCount: Int) throws
+        -> ChartData
+    {
+        if periodInDaysFromToday < pointsCount {
+            throw HabitTrackerErrors.chartDataError("too few days for displaying on graph")
+        }
+
+        return calculateProgressPerStepDays(
+            stepDays: (periodInDaysFromToday + pointsCount - 1) / pointsCount,
+            pointsCount: pointsCount)
     }
 
     private func recalculateProgress() {
