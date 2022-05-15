@@ -99,18 +99,18 @@ struct WholeLineGraphView: View {
     var dataPoints: [Double]
     var forceMinValue: Double? = nil
     var forceMaxValue: Double? = nil
-    @ObservedObject var habit: BaseHabit
+    @Binding var colorStyleNumber: Int
 
     var body: some View {
         ZStack {
             Line(dataPoints: dataPoints, forceMinValue: forceMinValue, forceMaxValue: forceMaxValue)
-                .accentColor(ColorStyles.allStyles[habit.colorStyleNumber].mainColor)
+                .accentColor(ColorStyles.allStyles[colorStyleNumber].mainColor)
 
             LineChartCircleView(
                 dataPoints: dataPoints, radius: 4.0, forceMinValue: forceMinValue,
                 forceMaxValue: forceMaxValue
             )
-            .accentColor(ColorStyles.allStyles[habit.colorStyleNumber].mainColor)
+            .accentColor(ColorStyles.allStyles[colorStyleNumber].mainColor)
 
             LineChartCircleView(
                 dataPoints: dataPoints, radius: 2.0, forceMinValue: forceMinValue,
@@ -128,7 +128,7 @@ struct LineChartView: View {
     var forceMaxValue: Double? = nil
     var innerCircleColor: Color = .white
     @State private var opacity: Double = 0
-    @ObservedObject var habit: BaseHabit
+    @Binding var colorStyleNumber: Int
 
     static let kChartHeight: CGFloat = 240
     static let kYLegendIndent: CGFloat = 40
@@ -154,7 +154,7 @@ struct LineChartView: View {
 
                         WholeLineGraphView(
                             dataPoints: dataPoints, forceMinValue: forceMinValue,
-                            forceMaxValue: forceMaxValue, habit: habit
+                            forceMaxValue: forceMaxValue, colorStyleNumber: $colorStyleNumber
                         )
                         .frame(
                             width: reader.frame(in: .local).width - LineChartView.kYLegendIndent,

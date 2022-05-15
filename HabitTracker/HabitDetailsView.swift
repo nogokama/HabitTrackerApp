@@ -25,7 +25,7 @@ struct HabitDetailsView: View {
             VStack {
                 LineChartView(
                     dataPoints: yDataValues, xDataPoints: xDataPoints, forceMinValue: 0,
-                    forceMaxValue: 100, habit: habit
+                    forceMaxValue: 100, colorStyleNumber: $habit.colorStyleNumber
                 )
                 .padding()
             }
