@@ -14,10 +14,11 @@ class BaseHabit: ObservableObject, Identifiable, Codable {
         self.progress = 0
         self.habitTracker = nil
         self.archived = false
+        self.colorStyleNumber = 0
     }
 
     private enum CodingKeys: CodingKey {
-        case id, title, archived
+        case id, title, archived, colorStyle
     }
 
     public func archive() {
@@ -38,17 +39,29 @@ class BaseHabit: ObservableObject, Identifiable, Codable {
         } catch {
             self.archived = false
         }
+        do {
+            try self.colorStyleNumber = container.decode(Int.self, forKey: .colorStyle)
+        } catch {
+            self.colorStyleNumber = 0
+        }
         self.progress = 0
         self.habitTracker = nil
     }
 
     func encode(to encoder: Encoder) throws {
-        preconditionFailure("This method must be overridden")
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(archived, forKey: .archived)
+        try container.encode(colorStyleNumber, forKey: .colorStyle)
     }
 
     var id: UUID
     @Published var title: String
     @Published var progress: Int
+    @Published var colorStyleNumber: Int {
+        didSet {
+            habitTracker!.dumpAllData()
+        }
+    }
     var habitTracker: HabitTracker?
     var archived: Bool {
         didSet {

@@ -42,7 +42,7 @@ struct DiscreteHabitView: View {
                 }
             )
             .padding()
-            .background(Color.yellow)
+            .background(ColorStyles.allStyles[habit.colorStyleNumber].mainColor)
             .cornerRadius(20)
             VStack {
                 Spacer()

@@ -13,7 +13,9 @@ struct CreatingHabitView: View {
     var body: some View {
         NavigationView {
             Form {
-                TextField("Habit Name", text: $name)
+                Section("NAME") {
+                    TextField("Habit Name", text: $name)
+                }
             }
             .navigationBarTitle("Add")
             .navigationBarItems(
