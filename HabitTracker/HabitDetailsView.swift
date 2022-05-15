@@ -6,27 +6,42 @@ import Foundation
 import SwiftUI
 
 struct HabitDetailsView: View {
+    static let analyzePointsCount: Int = 14
     @Environment(\.presentationMode) var presentationMode
     @ObservedObject var habit: DiscreteHabit
     @Binding var showingHabitDetailsView: Bool
     @State var showingChangingView: Bool = false
+    @ObservedObject var chartData: ChartData
+    @State var analyzeDaysCount: Int
 
-    let analyzeDaysCount: Int = 13
-
-    var yDataValues: [Double] {
-        habit.calculateProgressForNLastDays(days: self.analyzeDaysCount)
-    }
-    var xDataPoints: [String] {
-        return HabitDate.getNLastDays(days: self.analyzeDaysCount)
+    init(habit: DiscreteHabit, showingHabitDetailsView: Binding<Bool>) {
+        self._analyzeDaysCount = State(initialValue: HabitDetailsView.analyzePointsCount)
+        self.chartData = try! habit.calculateProgressPerPeriod(
+            periodInDaysFromToday: HabitDetailsView.analyzePointsCount,
+            pointsCount: HabitDetailsView.analyzePointsCount)
+        self.habit = habit
+        self._showingHabitDetailsView = showingHabitDetailsView
     }
 
     var body: some View {
         NavigationView {
             VStack {
-                LineChartView(
-                    dataPoints: yDataValues, xDataPoints: xDataPoints, forceMinValue: 0,
-                    forceMaxValue: 100, colorStyleNumber: $habit.colorStyleNumber
-                )
+                VStack {
+                    Picker("analyze period", selection: $analyzeDaysCount) {
+                        Text("2 weeks").tag(14)
+                        Text("month").tag(30)
+                        Text("year").tag(365)
+                    }
+                    .pickerStyle(.segmented)
+                    .padding()
+                    LineChartView(
+                        chartData: try! habit.calculateProgressPerPeriod(
+                            periodInDaysFromToday: analyzeDaysCount,
+                            pointsCount: HabitDetailsView.analyzePointsCount),
+                        forceMinValue: 0,
+                        forceMaxValue: 100, colorStyleNumber: $habit.colorStyleNumber
+                    )
+                }
                 .padding()
             }
             .navigationBarTitle(habit.title)

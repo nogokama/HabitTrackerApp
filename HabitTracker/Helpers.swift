@@ -2,8 +2,7 @@ import Foundation
 import SwiftUI
 
 struct Legend: View {
-    var data: [Double]
-    var xData: [String]
+    @ObservedObject var chartData: ChartData
     @Binding var frame: CGRect
     var dataAreaWidth: CGFloat
     var hideHorizontalLines: Bool = false
@@ -14,14 +13,14 @@ struct Legend: View {
     var forceMaxValue: Double? = nil
 
     var stepWidth: CGFloat {
-        if data.count < 2 {
+        if chartData.pointsCount() < 2 {
             return 0
         }
-        return dataAreaWidth / CGFloat(data.count - 1)
+        return dataAreaWidth / CGFloat(chartData.pointsCount() - 1)
     }
 
     var stepHeight: CGFloat {
-        let points = self.data
+        let points = self.chartData.yValues
         var max: Double
         var min: Double
         if forceMaxValue != nil {
@@ -45,7 +44,7 @@ struct Legend: View {
     }
 
     var min: CGFloat {
-        let points = self.data
+        let points = self.chartData.yValues
         if forceMinValue != nil {
             return CGFloat(forceMinValue!)
         }
@@ -77,9 +76,9 @@ struct Legend: View {
                 }
 
             }
-            ForEach((0..<self.xData.count), id: \.self) { number in
+            ForEach((0..<self.chartData.pointsCount()), id: \.self) { number in
                 if number % 2 == 0 {
-                    Text("\(xData[number])")
+                    Text("\(self.chartData.xLabels[number])")
                         .offset(
                             x: getXPosition(pointNumber: number), y: self.frame.height + 3 * padding
                         )
@@ -118,7 +117,7 @@ struct Legend: View {
     }
 
     func getYLegend() -> [Double]? {
-        let points = self.data
+        let points = self.chartData.yValues
         guard var max = points.max() else { return nil }
         guard var min = points.min() else { return nil }
         if forceMinValue != nil {
