@@ -232,6 +232,17 @@ class DiscreteHabit: BaseHabit {
             pointsCount: pointsCount)
     }
 
+    public func calculatePercentagePerPeriod(lastDays: Int) -> Int {
+        var completedDaysCount = 0
+        for i in stride(from: 0, to: lastDays, by: 1) {
+            let date = HabitDate.getDateFromToday(byAddingDays: -i)
+            if self.completed_days.contains(date) {
+                completedDaysCount += 1
+            }
+        }
+        return completedDaysCount * 100 / lastDays
+    }
+
     private func recalculateProgress() {
         progress = calculateTotalProgress()
         print(progress)
