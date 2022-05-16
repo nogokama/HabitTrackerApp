@@ -43,9 +43,6 @@ struct HabitDetailsView: View {
                         colorStyleNumber: $habit.colorStyleNumber
                     )
                 }
-                .onAppear {
-                    print(habit.calculateProgressForNLastDays(days: 7))
-                }
                 .padding(.leading, 15)
                 .padding(.trailing, 15)
                 VStack {
