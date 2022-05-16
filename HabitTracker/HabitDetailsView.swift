@@ -26,6 +26,28 @@ struct HabitDetailsView: View {
     var body: some View {
         NavigationView {
             VStack {
+                HStack(spacing: 30) {
+                    CircleProgressBarView(
+                        title: "Week",
+                        progress: habit.calculatePercentagePerPeriod(lastDays: 7),
+                        colorStyleNumber: $habit.colorStyleNumber
+                    )
+                    CircleProgressBarView(
+                        title: "2 weeks",
+                        progress: habit.calculatePercentagePerPeriod(lastDays: 14),
+                        colorStyleNumber: $habit.colorStyleNumber
+                    )
+                    CircleProgressBarView(
+                        title: "Month",
+                        progress: habit.calculatePercentagePerPeriod(lastDays: 31),
+                        colorStyleNumber: $habit.colorStyleNumber
+                    )
+                }
+                .onAppear {
+                    print(habit.calculateProgressForNLastDays(days: 7))
+                }
+                .padding(.leading, 15)
+                .padding(.trailing, 15)
                 VStack {
                     Picker("analyze period", selection: $analyzeDaysCount) {
                         Text("2 weeks").tag(14)
@@ -33,7 +55,8 @@ struct HabitDetailsView: View {
                         Text("year").tag(365)
                     }
                     .pickerStyle(.segmented)
-                    .padding()
+                    .padding(.top)
+                    .padding(.bottom)
                     LineChartView(
                         chartData: try! habit.calculateProgressPerPeriod(
                             periodInDaysFromToday: analyzeDaysCount,
@@ -53,7 +76,9 @@ struct HabitDetailsView: View {
             .navigationBarItems(
                 trailing: Button("Change") {
                     showingChangingView = true
-                })
+                }
+            )
+            .padding()
         }
         .sheet(isPresented: $showingChangingView) {
             HabitChangingView(

@@ -193,3 +193,40 @@ struct LineChartView: View {
         }
     }
 }
+
+struct CircleProgressBarView: View {
+    let title: String
+    let progress: Int
+    @Binding var colorStyleNumber: Int
+
+    var body: some View {
+        VStack {
+            Text(title)
+            ZStack {
+                Circle()
+                    .stroke(lineWidth: 10.0)
+                    .opacity(0.3)
+                    .foregroundColor(ColorStyles.allStyles[colorStyleNumber].mainColor)
+                    .scaledToFit()
+                Circle()
+                    .trim(
+                        from: 0.0,
+                        to: min(CGFloat(self.progress) / 100.0, 1.0)
+                    )
+                    .stroke(
+                        style: StrokeStyle(
+                            lineWidth: 10.0,
+                            lineCap: .round,
+                            lineJoin: .round
+                        )
+                    )
+                    .foregroundColor(ColorStyles.allStyles[colorStyleNumber].mainColor)
+                    .rotationEffect(Angle(degrees: 270.0))
+                    .scaledToFit()
+                Text("\(self.progress) %")
+                    .font(.title3)
+                    .bold()
+            }
+        }
+    }
+}
