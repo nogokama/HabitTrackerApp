@@ -123,7 +123,7 @@ struct TappingButtonsView: View {
             ForEach(0..<Self.totalButtonsCount) { element in
                 SingleTypingButtonView(
                     habit: habit,
-                    position: Self.totalButtonsCount - element
+                    position: Self.totalButtonsCount - element - 1
                 )
             }
         }
