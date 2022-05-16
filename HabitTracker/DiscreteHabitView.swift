@@ -16,26 +16,30 @@ struct DiscreteHabitView: View {
         self.habit = habit
     }
 
+    public func getCircleRadius(progress: Int, metrics: GeometryProxy) -> CGFloat {
+        return max(
+            65,
+            0.019 * CGFloat(habit.progress)
+                * max(metrics.size.width, metrics.size.height))
+    }
+
     var body: some View {
         ZStack {
             ZStack {
                 if habit.progress < 100 {
                     Rectangle()
                         .foregroundColor(
-                            ColorStyles.allStyles[habit.colorStyleNumber].secondaryColor
+                            .gray.opacity(0.2)
                         )
                         .cornerRadius(20)
-
                     GeometryReader { metrics in
                         Circle()
                             .stroke(
-                                lineWidth: max(
-                                    65,
-                                    0.019 * CGFloat(habit.progress)
-                                        * max(metrics.size.width, metrics.size.height))
+                                lineWidth: getCircleRadius(
+                                    progress: habit.progress, metrics: metrics)
                             )
                             .foregroundColor(
-                                ColorStyles.allStyles[habit.colorStyleNumber].mainColor
+                                ColorStyles.allStyles[habit.colorStyleNumber].secondaryColor
                             )
                             .frame(
                                 width: 1,
@@ -69,7 +73,8 @@ struct DiscreteHabitView: View {
                             .foregroundColor(.black)
                         Spacer()
                     }
-                }.padding()
+                }
+                .padding()
             }
             .onTapGesture {
                 print("Large button tapped")
