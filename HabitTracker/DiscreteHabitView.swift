@@ -18,32 +18,64 @@ struct DiscreteHabitView: View {
 
     var body: some View {
         ZStack {
-            Button(
-                action: {
-                    print("Large button tapped")
-                    showingDetailsView = true
-                },
-                label: {
-                    VStack(spacing: 20) {
-                        HStack {
-                            Text(habit.title)
-                                .font(.title)
-                                .fontWeight(.bold)
-                                .foregroundColor(.black)
-                            Spacer()
-                        }
-                        HStack {
-                            Text("\(habit.progress)%")
-                                .font(.title)
-                                .foregroundColor(.black)
-                            Spacer()
-                        }
+            ZStack {
+                if habit.progress < 100 {
+                    Rectangle()
+                        .foregroundColor(
+                            ColorStyles.allStyles[habit.colorStyleNumber].secondaryColor
+                        )
+                        .cornerRadius(20)
+
+                    GeometryReader { metrics in
+                        Circle()
+                            .stroke(
+                                lineWidth: max(
+                                    65,
+                                    0.019 * CGFloat(habit.progress)
+                                        * max(metrics.size.width, metrics.size.height))
+                            )
+                            .foregroundColor(
+                                ColorStyles.allStyles[habit.colorStyleNumber].mainColor
+                            )
+                            .frame(
+                                width: 1,
+                                height: 1
+                            )
+                            .position(x: 40, y: 33)
+                            .clipped()
+                            .rotation3DEffect(
+                                .degrees(180),
+                                axis: (x: 1, y: 0, z: 0)
+                            )
+                            .cornerRadius(20)
                     }
+                } else {
+                    Rectangle()
+                        .foregroundColor(ColorStyles.allStyles[habit.colorStyleNumber].mainColor)
+                        .cornerRadius(20)
                 }
-            )
-            .padding()
-            .background(ColorStyles.allStyles[habit.colorStyleNumber].mainColor)
-            .cornerRadius(20)
+
+                VStack(spacing: 20) {
+                    HStack {
+                        Text(habit.title)
+                            .font(.title)
+                            .fontWeight(.bold)
+                            .foregroundColor(.black)
+                        Spacer()
+                    }
+                    HStack {
+                        Text("\(habit.progress)%")
+                            .font(.title)
+                            .foregroundColor(.black)
+                        Spacer()
+                    }
+                }.padding()
+            }
+            .onTapGesture {
+                print("Large button tapped")
+                showingDetailsView = true
+            }
+
             VStack {
                 Spacer()
                 HStack {

@@ -7,18 +7,25 @@ import SwiftUI
 
 public class HabitColorStyle {
     public var mainColor: Color
+    public var secondaryColor: Color
 
     public init(mainColor: Color) {
         self.mainColor = mainColor
+        self.secondaryColor = mainColor.opacity(0.7)
     }
 }
 
 public struct ColorStyles {
-    public static let yellowHabitStyle = HabitColorStyle(mainColor: .yellow)
-    public static let orangeHabitStyle = HabitColorStyle(mainColor: .orange)
-    public static let greenHabitStyle = HabitColorStyle(mainColor: .green)
-    public static let blueHabitStyle = HabitColorStyle(mainColor: .blue)
-    public static let purpleHabitStyle = HabitColorStyle(mainColor: .purple)
+    public static let yellowHabitStyle = HabitColorStyle(
+        mainColor: .yellow)
+    public static let orangeHabitStyle = HabitColorStyle(
+        mainColor: .orange)
+    public static let greenHabitStyle = HabitColorStyle(
+        mainColor: .green)
+    public static let blueHabitStyle = HabitColorStyle(
+        mainColor: .blue)
+    public static let purpleHabitStyle = HabitColorStyle(
+        mainColor: .purple)
 
     public static let allStyles = [
         yellowHabitStyle,
