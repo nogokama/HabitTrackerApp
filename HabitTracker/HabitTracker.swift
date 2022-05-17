@@ -19,24 +19,44 @@ class HabitTracker: ObservableObject {
             }
         }
         self.publishedHabits = []
-        for habit in self.habits {
-            if !habit.isArchived() {
-                self.publishedHabits.append(habit)
-            }
+        self.habits.sort {
+            $0.orderNumber < $1.orderNumber
         }
         for habit in self.habits {
             habit.habitTracker = self
+            if !habit.isArchived() {
+                habit.orderNumber = publishedHabits.count
+                self.publishedHabits.append(habit)
+            } else {
+                habit.orderNumber = -1
+            }
         }
     }
 
     public func getHabits() -> [BaseHabit] {
-        return self.habits
+        publishedHabits.sorted {
+            $0.orderNumber < $1.orderNumber
+        }
     }
 
     public func addNewHabit(habit: DiscreteHabit) {
+        habit.orderNumber = habit.isArchived() ? -1 : 0
         self.habits.append(habit)
-        if !habit.isArchived() {
-            self.publishedHabits.append(habit)
+        if habit.isArchived() {
+            return
+        }
+        for habit in publishedHabits {
+            habit.orderNumber += 1
+        }
+        self.publishedHabits.append(habit)
+    }
+
+    private func recalculateHabitOrders() {
+        self.publishedHabits.sort {
+            $0.orderNumber < $1.orderNumber
+        }
+        for i in 0..<publishedHabits.count {
+            publishedHabits[i].orderNumber = i
         }
     }
 
@@ -46,6 +66,7 @@ class HabitTracker: ObservableObject {
                 return h.id == habit.id
             })!
         )
+        self.recalculateHabitOrders()
     }
 
     public func dumpAllData() {

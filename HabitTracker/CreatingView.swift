@@ -22,8 +22,8 @@ struct CreatingHabitView: View {
                 trailing: Button("Done") {
                     if name != "" {
                         let habit = DiscreteHabit(title: name)
-                        habitTracker.addNewHabit(habit: habit)
                         habit.habitTracker = habitTracker
+                        habitTracker.addNewHabit(habit: habit)
                     }
                     self.presentationMode.wrappedValue.dismiss()
                 })
