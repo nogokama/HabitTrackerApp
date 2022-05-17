@@ -24,6 +24,7 @@ class BaseHabit: ObservableObject, Identifiable, Codable {
 
     public func archive() {
         self.archived = true
+        self.orderNumber = -1
         self.habitTracker!.markHabitArchived(habit: self)
     }
 
