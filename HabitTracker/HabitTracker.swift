@@ -24,16 +24,22 @@ class HabitTracker: ObservableObject {
                 self.publishedHabits.append(habit)
             }
         }
-        for habit in self.habits {
-            habit.habitTracker = self
+        for i in 0..<self.habits.count {
+            self.habits[i].habitTracker = self
+            if self.habits[i].orderNumber == -1 {
+                self.habits[i].orderNumber = i
+            }
         }
     }
 
     public func getHabits() -> [BaseHabit] {
-        return self.habits
+        return self.habits.sorted {
+            $0.orderNumber < $1.orderNumber
+        }
     }
 
     public func addNewHabit(habit: DiscreteHabit) {
+        habit.orderNumber = self.habits.count
         self.habits.append(habit)
         if !habit.isArchived() {
             self.publishedHabits.append(habit)

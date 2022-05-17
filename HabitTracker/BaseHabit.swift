@@ -15,10 +15,11 @@ class BaseHabit: ObservableObject, Identifiable, Codable {
         self.habitTracker = nil
         self.archived = false
         self.colorStyleNumber = 0
+        self.orderNumber = -1
     }
 
     private enum CodingKeys: CodingKey {
-        case id, title, archived, colorStyle
+        case id, title, archived, colorStyle, orderNumber
     }
 
     public func archive() {
@@ -44,6 +45,11 @@ class BaseHabit: ObservableObject, Identifiable, Codable {
         } catch {
             self.colorStyleNumber = 0
         }
+        do {
+            try self.orderNumber = container.decode(Int.self, forKey: .orderNumber)
+        } catch {
+            self.orderNumber = -1
+        }
         self.progress = 0
         self.habitTracker = nil
     }
@@ -52,12 +58,18 @@ class BaseHabit: ObservableObject, Identifiable, Codable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(archived, forKey: .archived)
         try container.encode(colorStyleNumber, forKey: .colorStyle)
+        try container.encode(orderNumber, forKey: .orderNumber)
     }
 
     var id: UUID
     @Published var title: String
     @Published var progress: Int
     @Published var colorStyleNumber: Int {
+        didSet {
+            habitTracker!.dumpAllData()
+        }
+    }
+    @Published var orderNumber: Int {
         didSet {
             habitTracker!.dumpAllData()
         }
