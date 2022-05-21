@@ -41,7 +41,7 @@ class HabitDate: Hashable, Codable, Comparable {
         self.year = Calendar.current.component(.year, from: date)
     }
 
-    private func getSwiftDate() -> Date {
+    public func getSwiftDate() -> Date {
         let components = DateComponents(year: year, month: month, day: day)
         return Calendar(identifier: .gregorian).date(from: components)!
     }
@@ -52,6 +52,14 @@ class HabitDate: Hashable, Codable, Comparable {
             from: getSwiftDate(),
             to: otherDate.getSwiftDate()
         ).day! - 1
+    }
+
+    public func isOnTheSameWeekAs(otherDate: HabitDate) -> Bool {
+        if getDaysDifference(otherDate: otherDate) >= 7 {
+            return false
+        }
+        return Calendar.current.component(.weekOfYear, from: getSwiftDate())
+            == Calendar.current.component(.weekOfYear, from: otherDate.getSwiftDate())
     }
 
     static func getDateFromToday(byAddingDays: Int) -> HabitDate {
@@ -92,6 +100,28 @@ class HabitDate: Hashable, Codable, Comparable {
         return Self.weekdays[Calendar.current.component(.weekday, from: targetDate) - 1]
     }
 
+    static func getFullWeeksCountBetween(startDate: HabitDate, endDate: HabitDate)
+        -> Int
+    {
+        var firstDate = startDate
+        var secondDate = endDate
+        if firstDate > secondDate {
+            swap(&firstDate, &secondDate)
+        }
+        return
+            (firstDate.getDaysDifference(otherDate: secondDate) - getWeekdayNumber(date: secondDate)
+            - 7
+            + getWeekdayNumber(date: firstDate)) / 7
+    }
+
+    static func getWeekdayNumber(date: HabitDate) -> Int {
+        Calendar.current.component(.weekday, from: date.getSwiftDate()) - 1
+    }
+
+    public func getWeekdayNumber() -> Int {
+        HabitDate.getWeekdayNumber(date: self)
+    }
+
     static func getDay(fromToday: Int) -> String {
         let targetDate = getSwiftDateFromToday(fromToday: fromToday)
         return String(format: "%02d", Calendar.current.component(.day, from: targetDate))
@@ -115,9 +145,52 @@ class HabitDate: Hashable, Codable, Comparable {
     var year: Int
 }
 
+class DiscreteHabitFrequencyMode: Hashable, Codable, Equatable {
+    var daysPerWeek: Int
+    init(daysPerWeek: Int = 7) {
+        self.daysPerWeek = daysPerWeek
+        // TODO add exception if incorrect value
+    }
+
+    public func calculateBonusProgress(currentProgress: Int, alreadyCompletedDays: Int) -> Int {
+        // TODO advance bonus progress for different modes
+        if currentProgress <= 2 {
+            return 5
+        }
+        if currentProgress <= 10 {
+            return 2
+        }
+        return 1
+    }
+    public func calculatePenalty(skippedDays: Int) -> Int {
+        if skippedDays <= 0 {
+            return 0
+        }
+        // TODO advance bonus progress for different modes
+        if skippedDays >= 17 {
+            return 100
+        }
+        return Int(floor(pow(1.2, Double(skippedDays))))
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(daysPerWeek)
+    }
+
+    static func == (lhs: DiscreteHabitFrequencyMode, rhs: DiscreteHabitFrequencyMode) -> Bool {
+        lhs.daysPerWeek == rhs.daysPerWeek
+    }
+
+    static let names = [
+        "Once a week", "Twice a week", "3 times a week", "4 times a week", "5 times a week",
+        "6 times a week", "Everyday",
+    ]
+}
+
 class DiscreteHabit: BaseHabit {
     override init(title: String = "default") {
         self.completed_days = Set()
+        self.frequencyMode = DiscreteHabitFrequencyMode()
         super.init(title: title)
         self.progress = calculateTotalProgress()
     }
@@ -163,27 +236,46 @@ class DiscreteHabit: BaseHabit {
                 dates.append(element)
             }
         }
-        if !completed_days.contains(HabitDate.today())
-            && !completed_days.contains(HabitDate.yesterday())
-        {
-            dates.append(HabitDate.yesterday())
-        }
 
         dates.sort()
         var answer = 0
         if dates.count == 0 {
             return answer
         }
-        for i in 0..<dates.count - 1 {
-            answer += calculateAdditionalPercent(currentPercent: answer)
-            answer -= calculateFailPercent(
-                skip_uninterrupted_days: dates[i].getDaysDifference(otherDate: dates[i + 1])
-            )
-            answer = max(0, answer)
-        }
 
-        if completed_days.contains(dates[dates.count - 1]) && dates[dates.count - 1] <= targetDate {
-            answer += calculateAdditionalPercent(currentPercent: answer)
+        var daysOnCurrentWeek = 1
+        answer = self.frequencyMode.calculateBonusProgress(
+            currentProgress: answer, alreadyCompletedDays: 0)
+
+        for i in 1..<dates.count {
+            if dates[i].isOnTheSameWeekAs(otherDate: dates[i - 1]) {
+                let fullDaysBetween = dates[i].getDaysDifference(otherDate: dates[i - 1]) - 1
+                let skippedDays = max(
+                    0,
+                    min(
+                        fullDaysBetween,
+                        self.frequencyMode.daysPerWeek - daysOnCurrentWeek
+                            - (7 - dates[i - 1].getWeekdayNumber() - 1
+                                - fullDaysBetween)))
+
+                answer -= self.frequencyMode.calculatePenalty(skippedDays: skippedDays)
+                answer = max(answer, 0)
+                answer += self.frequencyMode.calculateBonusProgress(
+                    currentProgress: answer, alreadyCompletedDays: daysOnCurrentWeek)
+            } else {
+                daysOnCurrentWeek = 0
+                var skippedDays =
+                    HabitDate.getFullWeeksCountBetween(startDate: dates[i - 1], endDate: dates[i])
+                    * self.frequencyMode.daysPerWeek
+                skippedDays += self.frequencyMode.daysPerWeek - daysOnCurrentWeek
+                skippedDays += max(
+                    0, self.frequencyMode.daysPerWeek - 7 + dates[i].getWeekdayNumber())
+                answer -= self.frequencyMode.calculatePenalty(skippedDays: skippedDays)
+                answer = max(answer, 0)
+                answer += self.frequencyMode.calculateBonusProgress(
+                    currentProgress: answer, alreadyCompletedDays: daysOnCurrentWeek)
+            }
+            daysOnCurrentWeek += 1
         }
         return answer
     }
@@ -193,7 +285,11 @@ class DiscreteHabit: BaseHabit {
     }
 
     public func calculateTotalProgress() -> Int {
-        calculateTotalProgressByDate(targetDate: HabitDate.today())
+        if self.completed_days.contains(HabitDate.today()) {
+            return calculateTotalProgressByDate(targetDate: HabitDate.today())
+        } else {
+            return calculateTotalProgressByDate(targetDate: HabitDate.yesterday())
+        }
     }
 
     public func calculateProgressForNLastDays(days: Int) -> [Double] {
@@ -243,26 +339,13 @@ class DiscreteHabit: BaseHabit {
         return completedDaysCount * 100 / lastDays
     }
 
+    public func changeFrequencyMode(newFrequencyMode: DiscreteHabitFrequencyMode) {
+        self.frequencyMode = newFrequencyMode
+    }
+
     private func recalculateProgress() {
         progress = calculateTotalProgress()
         print(progress)
-    }
-
-    private func calculateAdditionalPercent(currentPercent: Int) -> Int {
-        if currentPercent <= 2 {
-            return 5
-        }
-        if currentPercent <= 10 {
-            return 2
-        }
-        return 1
-    }
-
-    private func calculateFailPercent(skip_uninterrupted_days: Int) -> Int {
-        if skip_uninterrupted_days >= 17 {
-            return 100
-        }
-        return Int(floor(pow(1.2, Double(skip_uninterrupted_days - 1))))
     }
 
     var completed_days: Set<HabitDate> {
@@ -272,13 +355,26 @@ class DiscreteHabit: BaseHabit {
         }
     }
 
+    var frequencyMode: DiscreteHabitFrequencyMode {
+        didSet {
+            habitTracker!.dumpAllData()
+            // TODO check if nil
+        }
+    }
+
     private enum CodingKeys: CodingKey {
-        case id, title, completed_days
+        case id, title, completed_days, frequency_mode
     }
 
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.completed_days = try container.decode(Set<HabitDate>.self, forKey: .completed_days)
+        do {
+            try self.frequencyMode = container.decode(
+                DiscreteHabitFrequencyMode.self, forKey: .frequency_mode)
+        } catch {
+            self.frequencyMode = DiscreteHabitFrequencyMode()
+        }
         try super.init(from: decoder)
         self.progress = calculateTotalProgress()
     }
@@ -288,6 +384,7 @@ class DiscreteHabit: BaseHabit {
         try container.encode(id, forKey: .id)
         try container.encode(title, forKey: .title)
         try container.encode(completed_days, forKey: .completed_days)
+        try container.encode(frequencyMode, forKey: .frequency_mode)
         try super.encode(to: encoder)
     }
 }
