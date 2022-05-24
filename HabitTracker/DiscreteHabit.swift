@@ -411,6 +411,14 @@ class DiscreteHabit: BaseHabit {
     public func changeFrequencyMode(newFrequencyMode: DiscreteHabitFrequencyMode) {
         self.frequencyMode = newFrequencyMode
     }
+    public func update(
+        title: String, colorStyleNumber: Int, frequencyMode: DiscreteHabitFrequencyMode
+    ) {
+        self.title = title
+        self.colorStyleNumber = colorStyleNumber
+        self.frequencyMode = frequencyMode
+        recalculateProgress()
+    }
 
     private func recalculateProgress() {
         progress = calculateTotalProgress()

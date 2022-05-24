@@ -167,9 +167,9 @@ struct HabitChangingView: View {
             .navigationBarItems(
                 trailing: Button("Save") {
                     if enteredName.trimmingCharacters(in: .whitespacesAndNewlines) != "" {
-                        habit.title = enteredName.trimmingCharacters(in: .whitespacesAndNewlines)
-                        habit.colorStyleNumber = colorSelected
-                        habit.frequencyMode = frequencyModeSelected
+                        habit.update(
+                            title: enteredName.trimmingCharacters(in: .whitespacesAndNewlines),
+                            colorStyleNumber: colorSelected, frequencyMode: frequencyModeSelected)
                         self.presentationMode.wrappedValue.dismiss()
                     }
                 })
