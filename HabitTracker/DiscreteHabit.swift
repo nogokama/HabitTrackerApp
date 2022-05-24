@@ -47,11 +47,12 @@ class HabitDate: Hashable, Codable, Comparable {
     }
 
     public func getDaysDifference(otherDate: HabitDate) -> Int {
-        Calendar.current.dateComponents(
-            [.day],
-            from: getSwiftDate(),
-            to: otherDate.getSwiftDate()
-        ).day! - 1
+        return abs(
+            Calendar.current.dateComponents(
+                [.day],
+                from: getSwiftDate(),
+                to: otherDate.getSwiftDate()
+            ).day!)
     }
 
     public func isOnTheSameWeekAs(otherDate: HabitDate) -> Bool {
@@ -145,7 +146,6 @@ class HabitDate: Hashable, Codable, Comparable {
     var year: Int
 }
 
-
 class DiscreteHabitFrequencyMode: Hashable, Codable, Equatable {
     var targetDaysPerWeek: Int
     init(daysPerWeek: Int = 7) {
@@ -169,7 +169,7 @@ class DiscreteHabitFrequencyMode: Hashable, Codable, Equatable {
         [7, 5, 1],
         [6, 5, 1],
         [5, 3, 1],
-        [4, 2, 1]
+        [4, 2, 1],
     ]
 
     public func calculateBonusProgress(
@@ -193,17 +193,15 @@ class DiscreteHabitFrequencyMode: Hashable, Codable, Equatable {
             return coefficients[targetDaysPerWeek - 1][2] + 1
         }
         return coefficients[targetDaysPerWeek - 1][2]
-     }
+    }
 
     public func calculatePenalty(skippedDays: Int) -> Int {
         if skippedDays <= 0 {
             return 0
         }
-        // TODO advance bonus progress for different modes
-        if skippedDays >= 17 {
-            return 100
-        }
-        return Int(floor(pow(1.2, Double(skippedDays))))
+        return min(
+            100,
+            Int(floor(pow(pow(1.2, Double(7.0 / Double(targetDaysPerWeek))), Double(skippedDays)))))
     }
 
     func hash(into hasher: inout Hasher) {
@@ -296,19 +294,24 @@ class DiscreteHabit: BaseHabit {
                 answer += self.frequencyMode.calculateBonusProgress(
                     currentProgress: answer, alreadyCompletedDaysPerCurrentWeek: daysOnCurrentWeek)
             } else {
-                daysOnCurrentWeek = 0
                 var skippedDays =
                     HabitDate.getFullWeeksCountBetween(startDate: dates[i - 1], endDate: dates[i])
                     * self.frequencyMode.targetDaysPerWeek
-                skippedDays += self.frequencyMode.targetDaysPerWeek - daysOnCurrentWeek
+
+                skippedDays += min(
+                    7 - dates[i - 1].getWeekdayNumber() - 1,
+                    self.frequencyMode.targetDaysPerWeek - daysOnCurrentWeek)
+
                 skippedDays += max(
                     0, self.frequencyMode.targetDaysPerWeek - 7 + dates[i].getWeekdayNumber())
                 answer -= self.frequencyMode.calculatePenalty(skippedDays: skippedDays)
                 answer = max(answer, 0)
+                daysOnCurrentWeek = 0
                 answer += self.frequencyMode.calculateBonusProgress(
                     currentProgress: answer, alreadyCompletedDaysPerCurrentWeek: daysOnCurrentWeek)
             }
             daysOnCurrentWeek += 1
+            print(i, answer)
         }
         return answer
     }
