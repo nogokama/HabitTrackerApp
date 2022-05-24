@@ -6,4 +6,5 @@ import Foundation
 
 enum HabitTrackerErrors: Error {
     case chartDataError(String)
+    case percentageCalculationError(String)
 }

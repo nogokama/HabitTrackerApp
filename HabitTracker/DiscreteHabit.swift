@@ -386,7 +386,16 @@ class DiscreteHabit: BaseHabit {
             pointsCount: pointsCount)
     }
 
-    public func calculatePercentagePerPeriod(lastDays: Int) -> Int {
+    private func getCompulsoryDaysToCompletePerPeriod(lastDays: Int) -> Int {
+        (lastDays / 7) * self.frequencyMode.targetDaysPerWeek
+            + ((lastDays % 7) * self.frequencyMode.targetDaysPerWeek) / 7
+    }
+
+    public func calculatePercentagePerPeriod(lastDays: Int) throws -> Int {
+        if lastDays < 7 {
+            throw HabitTrackerErrors.percentageCalculationError(
+                "too few days \(lastDays) for calculating progress percentage")
+        }
         var completedDaysCount = 0
         for i in stride(from: 0, to: lastDays, by: 1) {
             let date = HabitDate.getDateFromToday(byAddingDays: -i)
@@ -394,7 +403,9 @@ class DiscreteHabit: BaseHabit {
                 completedDaysCount += 1
             }
         }
-        return completedDaysCount * 100 / lastDays
+        return min(
+            100, completedDaysCount * 100 / getCompulsoryDaysToCompletePerPeriod(lastDays: lastDays)
+        )
     }
 
     public func changeFrequencyMode(newFrequencyMode: DiscreteHabitFrequencyMode) {

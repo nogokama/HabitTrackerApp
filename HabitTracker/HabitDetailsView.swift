@@ -29,17 +29,17 @@ struct HabitDetailsView: View {
                 HStack(spacing: 30) {
                     CircleProgressBarView(
                         title: "Week",
-                        progress: habit.calculatePercentagePerPeriod(lastDays: 7),
+                        progress: try! habit.calculatePercentagePerPeriod(lastDays: 7),
                         colorStyleNumber: $habit.colorStyleNumber
                     )
                     CircleProgressBarView(
                         title: "2 weeks",
-                        progress: habit.calculatePercentagePerPeriod(lastDays: 14),
+                        progress: try! habit.calculatePercentagePerPeriod(lastDays: 14),
                         colorStyleNumber: $habit.colorStyleNumber
                     )
                     CircleProgressBarView(
                         title: "Month",
-                        progress: habit.calculatePercentagePerPeriod(lastDays: 31),
+                        progress: try! habit.calculatePercentagePerPeriod(lastDays: 31),
                         colorStyleNumber: $habit.colorStyleNumber
                     )
                 }
