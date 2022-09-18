@@ -34,10 +34,11 @@ Here are some examples:
 ## Usage demonstration
 
 In this video you may see all the functionality of the application:
+ - Changing progress of existing habits (progress is changed according to the completed days ticked)
  - Habit creation 
  - Changing settings of the current habit 
  - Archiving habits
  - Different views of habit details
 
-<video src="docs/content/demonstration.mov" controls="controls" style="max-width: 400px;">
+<video src="https://user-images.githubusercontent.com/56224151/190889423-c598d21a-339c-424c-a8f0-15b0d7012137.mov" controls="controls" style="max-width: 400px;">
 </video>
