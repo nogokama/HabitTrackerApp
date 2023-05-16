@@ -9,20 +9,41 @@ struct CreatingHabitView: View {
     @Environment(\.presentationMode) var presentationMode
     @ObservedObject var habitTracker: HabitTracker
     @State private var name = ""
+    @State private var colorSelected: Int = 0
+    @State private var frequencyModeSelected = DiscreteHabitFrequencyMode(daysPerWeek: 7)
 
     var body: some View {
         NavigationView {
             Form {
-                Section("NAME") {
+                Section("GENERAL") {
                     TextField("Habit Name", text: $name)
+                    Picker("Color", selection: $colorSelected) {
+                        ForEach(0..<ColorStyles.allStyles.count) { number in
+                            MiniCircle(color: ColorStyles.allStyles[number].mainColor)
+                                .tag(number)
+                        }
+                    }
+                    Picker("Frequency mode", selection: $frequencyModeSelected) {
+                        ForEach(0..<DiscreteHabitFrequencyMode.names.count) { number in
+                            Text(DiscreteHabitFrequencyMode.names[number]).tag(
+                                DiscreteHabitFrequencyMode(daysPerWeek: number + 1))
+                        }
+                    }
                 }
             }
-            .navigationBarTitle("Add")
+            .navigationBarTitle("Add New Habit")
+            .navigationBarItems(
+                leading: Button("Back") {
+                    self.presentationMode.wrappedValue.dismiss()
+                }
+            )
             .navigationBarItems(
                 trailing: Button("Done") {
                     if name != "" {
                         let habit = DiscreteHabit(title: name)
                         habit.habitTracker = habitTracker
+                        habit.frequencyMode = frequencyModeSelected
+                        habit.colorStyleNumber = colorSelected
                         habitTracker.addNewHabit(habit: habit)
                     }
                     self.presentationMode.wrappedValue.dismiss()

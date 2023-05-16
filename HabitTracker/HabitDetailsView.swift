@@ -29,17 +29,17 @@ struct HabitDetailsView: View {
                 HStack(spacing: 30) {
                     CircleProgressBarView(
                         title: "Week",
-                        progress: habit.calculatePercentagePerPeriod(lastDays: 7),
+                        progress: try! habit.calculatePercentagePerPeriod(lastDays: 7),
                         colorStyleNumber: $habit.colorStyleNumber
                     )
                     CircleProgressBarView(
                         title: "2 weeks",
-                        progress: habit.calculatePercentagePerPeriod(lastDays: 14),
+                        progress: try! habit.calculatePercentagePerPeriod(lastDays: 14),
                         colorStyleNumber: $habit.colorStyleNumber
                     )
                     CircleProgressBarView(
                         title: "Month",
-                        progress: habit.calculatePercentagePerPeriod(lastDays: 31),
+                        progress: try! habit.calculatePercentagePerPeriod(lastDays: 31),
                         colorStyleNumber: $habit.colorStyleNumber
                     )
                 }
@@ -101,12 +101,14 @@ struct HabitChangingView: View {
 
     @State var enteredName: String = ""
     @State private var colorSelected: Int = 0
+    @State private var frequencyModeSelected: DiscreteHabitFrequencyMode
 
     init(habit: DiscreteHabit, showingHabitDetailsView: Binding<Bool>) {
         self.habit = habit
         self._showingHabitDetailsView = showingHabitDetailsView
         self._enteredName = State(initialValue: habit.title)
         self._colorSelected = State(initialValue: habit.colorStyleNumber)
+        self._frequencyModeSelected = State(initialValue: habit.frequencyMode)
     }
 
     var body: some View {
@@ -130,6 +132,13 @@ struct HabitChangingView: View {
                             ForEach(0..<ColorStyles.allStyles.count) { number in
                                 MiniCircle(color: ColorStyles.allStyles[number].mainColor)
                                     .tag(number)
+                            }
+                        }
+
+                        Picker("Frequency mode", selection: $frequencyModeSelected) {
+                            ForEach(0..<DiscreteHabitFrequencyMode.names.count) { number in
+                                Text(DiscreteHabitFrequencyMode.names[number]).tag(
+                                    DiscreteHabitFrequencyMode(daysPerWeek: number + 1))
                             }
                         }
 
@@ -158,8 +167,9 @@ struct HabitChangingView: View {
             .navigationBarItems(
                 trailing: Button("Save") {
                     if enteredName.trimmingCharacters(in: .whitespacesAndNewlines) != "" {
-                        habit.title = enteredName.trimmingCharacters(in: .whitespacesAndNewlines)
-                        habit.colorStyleNumber = colorSelected
+                        habit.update(
+                            title: enteredName.trimmingCharacters(in: .whitespacesAndNewlines),
+                            colorStyleNumber: colorSelected, frequencyMode: frequencyModeSelected)
                         self.presentationMode.wrappedValue.dismiss()
                     }
                 })
